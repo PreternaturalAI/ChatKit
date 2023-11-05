@@ -56,7 +56,7 @@ public struct ChatMessageList<Data: RandomAccessCollection, Content: View>: View
         ScrollViewReader { proxy in
             scrollView
                 .visible(didScroll)
-                .background(ChatDetailBackground())
+                .background(DefaultChatViewBackground())
                 .task {
                     if let last = data.last {
                         proxy.scrollTo(last.id, anchor: .bottom)
@@ -85,7 +85,7 @@ public struct ChatMessageList<Data: RandomAccessCollection, Content: View>: View
     private var scrollView: some View {
         ScrollView(showsIndicators: false) {
             LazyVStack {
-                _ChatMessageStack {
+                ChatMessageStack {
                     ForEach(data) { item in
                         if let attributes = itemAttributes(item) {
                             content(item)

@@ -5,27 +5,6 @@
 import MarkdownUI
 import Swallow
 import SwiftUIX
-
-public protocol ChatMessageConvertible {
-    func toChatMessage() -> ChatMessage
-}
-
-public struct ChatMessage: Hashable, Identifiable {
-    public let id: AnyHashable
-    public let isSender: Bool
-    public let body: String
-    
-    public init(
-        id: AnyHashable,
-        isSender: Bool,
-        body: String
-    ) {
-        self.id = id
-        self.isSender = isSender
-        self.body = body
-    }
-}
-
 public struct ChatMessageView: View {
     struct ProvidedActions: ExpressibleByNilLiteral {
         var onEdit: ((String) -> Void)?

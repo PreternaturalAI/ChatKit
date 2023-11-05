@@ -45,7 +45,8 @@ struct MessagesAppChatInputBarStyle: ChatInputBarStyle {
     func makeBody(configuration: ChatInputBarConfiguration) -> some View {
         ZStack {
             makeTextInputContainer(content: configuration.textInput)
-            
+                .frame(minWidth: 44)
+
             if let status = configuration.status {
                 status
             }
@@ -74,7 +75,7 @@ struct MessagesAppChatInputBarStyle: ChatInputBarStyle {
         
         func body(content: Content) -> some View {
             content
-                .frame(maxHeight: 512)
+                .frame(minWidth: 44, maxHeight: 512)
                 .focused($isTextFieldFocused)
                 .modify {
                     $0
@@ -157,7 +158,7 @@ struct _LargeSpotlightLikeTextInputStyle: ViewModifier {
                 
             }
             .modify(for: .macOS) {
-                $0.frame(maxWidth: 583)
+                $0.frame(minWidth: 88, maxWidth: 583)
             }
             .frame(maxHeight: 512)
             .fixedSize(horizontal: false, vertical: true)

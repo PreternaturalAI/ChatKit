@@ -4,7 +4,7 @@
 
 import SwiftUIX
 
-public struct ChatDetailBackground: View {
+public struct DefaultChatViewBackground: View {
     public var body: some View {
         #if os(iOS)
         Color.systemBackground

@@ -4,13 +4,13 @@
 
 import SwiftUIX
 
-public struct ChatBubble<Content: View>: View {
-    private let isSender: Bool
+public struct _ChatBubbleContainer<Content: View>: View {
     private let content: Content
-    
+    private let isSender: Bool
+
     public init(isSender: Bool, @ViewBuilder content: () -> Content) {
-        self.isSender = isSender
         self.content = content()
+        self.isSender = isSender
     }
     
     public var body: some View {

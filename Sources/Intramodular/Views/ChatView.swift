@@ -8,9 +8,9 @@ import SwiftUIX
 public struct ChatView<Content: View>: View {
     let content: Content
     let inputView: AnyView?
-
+    
     var properties: ChatViewProperties = nil
-        
+    
     public var body: some View {
         Group {
             content
@@ -59,36 +59,5 @@ extension ChatView {
     ) {
         self.content = content()
         self.inputView = input().eraseToAnyView()
-    }
-}
-
-// MARK: - Auxiliary -
-
-public enum MessageDeliveryState {
-    case sending
-    case errored
-    case idle
-}
-
-public struct ChatViewProperties: ExpressibleByNilLiteral {
-    var messageDeliveryState: MessageDeliveryState?
-    var interrupt: (() -> Void)?
-    
-    public init(nilLiteral: ()) {
-        self.messageDeliveryState = nil
-    }
-}
-
-extension EnvironmentValues {
-    struct ChatViewKey: EnvironmentKey {
-        static let defaultValue: ChatViewProperties? = nil
-    }
-    
-    public var _chatContainer: ChatViewProperties? {
-        get {
-            self[ChatViewKey.self]
-        } set {
-            self[ChatViewKey.self] = newValue
-        }
     }
 }
