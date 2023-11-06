@@ -21,6 +21,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/PreternaturalAI/MarkdownUI.git", branch: "main"),
         .package(url: "https://github.com/SwiftUIX/SwiftUIX.git", branch: "master"),
+        .package(url: "https://github.com/SwiftUIX/SwiftUIZ.git", branch: "main"),
         .package(url: "https://github.com/vmanot/CorePersistence.git", branch: "main"),
         .package(url: "https://github.com/vmanot/Swallow.git", branch: "master")
     ],
@@ -31,7 +32,8 @@ let package = Package(
                 "CorePersistence",
                 "MarkdownUI",
                 "Swallow",
-                "SwiftUIX"
+                "SwiftUIX",
+                "SwiftUIZ",
             ],
             path: "Sources"
         )

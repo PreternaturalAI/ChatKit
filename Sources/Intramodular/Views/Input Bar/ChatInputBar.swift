@@ -15,7 +15,7 @@ public struct ChatInputBar: View {
     
     public init(
         text: Binding<String>,
-        onSubmit: @escaping (String) -> Void
+        onSubmit: @escaping (String) -> Void = { _ in }
     ) {
         self._text = text
         self.onSubmit = onSubmit

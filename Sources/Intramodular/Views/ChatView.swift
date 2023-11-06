@@ -12,7 +12,7 @@ public struct ChatView<Content: View>: View {
     var properties: ChatViewProperties = nil
     
     public var body: some View {
-        Group {
+        XStack {
             content
         }
         .modify(forUnwrapped: inputView) { inputView in
