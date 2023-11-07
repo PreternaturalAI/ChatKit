@@ -5,21 +5,62 @@
 import MarkdownUI
 import Swallow
 import SwiftUIX
-public struct ChatMessageView: View {
-    struct ProvidedActions: ExpressibleByNilLiteral {
-        var onEdit: ((String) -> Void)?
-        var onDelete: (() -> Void)?
-        var onResend: (() -> Void)?
-        
-        init(nilLiteral: ()) {
-            
-        }
+
+struct ChatItemActions: ExpressibleByNilLiteral {
+    var onEdit: ((String) -> Void)?
+    var onDelete: (() -> Void)?
+    var onResend: (() -> Void)?
+    
+    init(
+        onEdit: ((String) -> Void)? = nil,
+        onDelete: (() -> Void)? = nil,
+        onResend: (() -> Void)? = nil
+    ) {
+        self.onEdit = onEdit
+        self.onDelete = onDelete
+        self.onResend = onResend
     }
     
+    init(nilLiteral: ()) {
+        
+    }
+    
+    func updating(with other: Self) -> Self {
+        var result = self
+        
+        result.onEdit = other.onEdit
+        result.onDelete = other.onDelete
+        result.onResend = other.onResend
+        
+        return result
+    }
+}
+
+extension EnvironmentValues {
+    struct ChatItemActionsKey: EnvironmentKey {
+        static var defaultValue: ChatItemActions = nil
+    }
+    
+    var _chatItemActions: ChatItemActions {
+        get {
+            self[ChatItemActionsKey.self]
+        } set {
+            self[ChatItemActionsKey.self] = newValue
+        }
+    }
+}
+
+public struct ChatMessageView: View {
+    @Environment(\._chatItemActions) var _chatItemActions
+    
     private let message: ChatMessage
-    private var actions: ProvidedActions = nil
+    private var _actions: ChatItemActions = nil
     
     @State private var isEditing: Bool = false
+    
+    fileprivate var actions: ChatItemActions {
+        _chatItemActions.updating(with: _actions)
+    }
     
     public init(
         message: ChatMessage
@@ -31,7 +72,6 @@ public struct ChatMessageView: View {
         Group {
             TextContent(
                 message: message,
-                supportedActions: actions,
                 isEditing: $isEditing
             )
         }
@@ -54,37 +94,40 @@ public struct ChatMessageView: View {
                 }
             }
         }
+        .transformEnvironment(\._chatItemActions) {
+            $0 = $0.updating(with: actions)
+        }
     }
     
     public func onEdit(
-        perform fn: @escaping (String) -> Void
+        perform fn: ((String) -> Void)?
     ) -> Self {
         then {
-            $0.actions.onEdit = fn
+            $0._actions.onEdit = fn
         }
     }
     
     public func onDelete(
-        perform fn: @escaping () -> Void
+        perform fn: (() -> Void)?
     ) -> Self {
         then {
-            $0.actions.onDelete = fn
+            $0._actions.onDelete = fn
         }
     }
     
     public func onResend(
-        perform fn: @escaping () -> Void
+        perform fn: (() -> Void)?
     ) -> Self {
         then {
-            $0.actions.onResend = fn
+            $0._actions.onResend = fn
         }
     }
 }
 
 extension ChatMessageView {
     struct TextContent: View {
+        @Environment(\._chatItemActions) var supportedActions
         let message: ChatMessage
-        let supportedActions: ChatMessageView.ProvidedActions
         
         @Binding var isEditing: Bool
         

@@ -16,21 +16,33 @@ public struct ChatMessageList<Data: RandomAccessCollection, Content: View>: View
     public typealias Item = Data.Element
     
     let data: Data
-    let content: (Item) -> Content
+    let content: (Self, Item) -> Content
     let itemAttributes: (Item) -> _ChatMessageListItemAttributes?
     
-    var delete: ((Item.ID) -> Void)?
+    var onResend: ((Item.ID) -> Void)?
+    var onDelete: ((Item.ID) -> Void)?
+    
     var messageDeliveryState: MessageDeliveryState? = nil
     
     @State private var didScroll: Bool = false
     
+    init(
+        _ data: Data,
+        @ViewBuilder content: @escaping (Self, Item) -> Content,
+        attributes: @escaping (Item) -> _ChatMessageListItemAttributes? = { _ in nil }
+    ) {
+        self.data = data
+        self.content = content
+        self.itemAttributes = attributes
+    }
+
     public init(
         _ data: Data,
         @ViewBuilder content: @escaping (Item) -> Content,
         attributes: @escaping (Item) -> _ChatMessageListItemAttributes? = { _ in nil }
     ) {
         self.data = data
-        self.content = content
+        self.content = { content($1) }
         self.itemAttributes = attributes
     }
     
@@ -39,10 +51,16 @@ public struct ChatMessageList<Data: RandomAccessCollection, Content: View>: View
     ) where Data.Element: ChatMessageConvertible, Content == AnyView {
         self.init(
             data,
-            content: {
-                let message = $0.toChatMessage()
+            content: { _list, item in
+                let message = item.toChatMessage()
                 
                 ChatMessageView(message: message)
+                    .onDelete(perform: _list.onDelete.map { onDelete in
+                        { onDelete(item.id) }
+                    })
+                    .onResend(perform: _list.onResend.map { onResend in
+                        { onResend(item.id) }
+                    })
                     .chatMessage(id: message.id, role: message.isSender ? .sender : .recipient)
                     .eraseToAnyView()
             },
@@ -58,19 +76,7 @@ public struct ChatMessageList<Data: RandomAccessCollection, Content: View>: View
                 .visible(didScroll)
                 .background(DefaultChatViewBackground())
                 .task {
-                    if let last = data.last {
-                        proxy.scrollTo(last.id, anchor: .bottom)
-                        
-                        withoutAnimation(after: .milliseconds(50)) {
-                            proxy.scrollTo(last.id, anchor: .bottom)
-                            
-                            withAnimation(.default) {
-                                didScroll = true
-                            }
-                        }
-                    } else {
-                        didScroll = true
-                    }
+                    didAppear(scrollView: proxy)
                 }
                 .onChange(of: data.last) { _ in
                     if let last = data.last {
@@ -82,19 +88,35 @@ public struct ChatMessageList<Data: RandomAccessCollection, Content: View>: View
         }
     }
     
+    private func didAppear(scrollView: ScrollViewProxy) {
+        if let last = data.last {
+            scrollView.scrollTo(last.id, anchor: .bottom)
+            
+            withoutAnimation(after: .milliseconds(50)) {
+                scrollView.scrollTo(last.id, anchor: .bottom)
+                
+                withAnimation(.default) {
+                    didScroll = true
+                }
+            }
+        } else {
+            didScroll = true
+        }
+    }
+    
     private var scrollView: some View {
         ScrollView(showsIndicators: false) {
             LazyVStack {
                 ChatMessageStack {
                     ForEach(data) { item in
                         if let attributes = itemAttributes(item) {
-                            content(item)
+                            content(self, item)
                                 .chatMessage(
                                     id: item.id,
                                     role: attributes.isSender ? .sender : .recipient
                                 )
                         } else {
-                            content(item)
+                            content(self, item)
                         }
                     }
                     .padding(.small)
@@ -115,5 +137,23 @@ public struct ChatMessageList<Data: RandomAccessCollection, Content: View>: View
             .modifier(RegularMessageBubbleStyle(isSender: false, contentExtendsToEdges: false))
             .frame(width: .greedy, alignment: .leading)
             .padding(.horizontal)
+    }
+}
+
+extension ChatMessageList {
+    public func onDelete(
+        perform fn: @escaping (Item.ID) -> Void
+    ) -> Self {
+        then {
+            $0.onDelete = fn
+        }
+    }
+    
+    public func onResend(
+        perform fn: @escaping (Item.ID) -> Void
+    ) -> Self {
+        then {
+            $0.onResend = fn
+        }
     }
 }
