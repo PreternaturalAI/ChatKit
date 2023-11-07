@@ -42,14 +42,16 @@ public struct ChatInputBar: View {
             switch _chatContainer.messageDeliveryState {
                 case .sending:
                     if let interrupt = _chatContainer.interrupt {
-                        Button("Stop Generating") {
+                        Button("Stop") {
                             interrupt()
                         }
                         .controlSize(.large)
                         .buttonStyle(.bordered)
                         .environment(\.isEnabled, true)
                     } else {
-                        Text("ChatGPT is responding...")
+                        ProgressView()
+                            .controlSize(.regular)
+                            .progressViewStyle(.circular)
                             .font(.body)
                             .foregroundColor(.secondary)
                     }

@@ -4,7 +4,7 @@
 
 import SwiftUIX
 
-public struct MessageBubbleShape: Shape {
+public struct _MessageBubbleShape: Shape {
     public enum Direction: Sendable {
         case leading
         case trailing
