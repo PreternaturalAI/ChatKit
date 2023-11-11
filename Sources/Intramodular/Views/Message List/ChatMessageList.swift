@@ -74,17 +74,11 @@ public struct ChatMessageList<Data: RandomAccessCollection, Content: View>: View
         ScrollViewReader { proxy in
             scrollView
                 .visible(didScroll)
-                .background(DefaultChatViewBackground())
+                ._SwiftUIX_defaultScrollAnchor(.bottom)
                 .task {
                     didAppear(scrollView: proxy)
                 }
-                .onChange(of: data.last) { _ in
-                    if let last = data.last {
-                        withAnimation(after: .milliseconds(50)) {
-                            proxy.scrollTo(last.id, anchor: .bottom)
-                        }
-                    }
-                }
+                .background(DefaultChatViewBackground())
         }
     }
     
