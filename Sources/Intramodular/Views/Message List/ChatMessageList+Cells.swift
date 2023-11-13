@@ -75,6 +75,7 @@ public struct ChatMessageView: View {
                 isEditing: $isEditing
             )
         }
+        .contentShape(Rectangle())
         .contextMenu {
             if actions.onEdit != nil {
                 Button("Edit") {
@@ -150,7 +151,8 @@ extension ChatMessageView {
                         Text("This message has no content.")
                             .foregroundColor(.secondary)
                     } else {
-                        markdownBody
+                        MarkdownBody(text: message.body)
+                            .equatable()
                     }
                 }
             }
@@ -166,11 +168,15 @@ extension ChatMessageView {
             )
         }
         
-        private var markdownBody: some View {
-            VStack(alignment: .leading, spacing: 0) {
-                Markdown(message.body)
-                    .markdownTheme(.docC)
-                    .textSelection(.enabled)
+        struct MarkdownBody: Equatable, View {
+            let text: String
+            
+            var body: some View {
+                VStack(alignment: .leading, spacing: 0) {
+                    Markdown(text)
+                        .markdownTheme(.docC)
+                        .textSelection(.enabled)
+                }
             }
         }
     }

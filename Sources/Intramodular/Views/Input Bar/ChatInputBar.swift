@@ -30,6 +30,7 @@ public struct ChatInputBar: View {
                         status: _chatContainer.messageDeliveryState == nil ? nil : statusView.eraseToAnyView()
                     )
                 )
+                .animation(.default, value: _chatContainer.messageDeliveryState)
             }
         } else {
             _UnimplementedView()
@@ -41,24 +42,26 @@ public struct ChatInputBar: View {
         Group {
             switch _chatContainer.messageDeliveryState {
                 case .sending:
-                    if let interrupt = _chatContainer.interrupt {
-                        Button("Stop") {
-                            interrupt()
-                        }
-                        .controlSize(.large)
-                        .buttonStyle(.bordered)
-                        .environment(\.isEnabled, true)
+                    if let stop = _chatContainer.interrupt {
+                        makeStopButton(action: stop)
                     } else {
-                        ProgressView()
-                            .controlSize(.regular)
-                            .progressViewStyle(.circular)
-                            .font(.body)
-                            .foregroundColor(.secondary)
+                        sendActivityDisclosure
                     }
                 default:
                     EmptyView()
             }
         }
+    }
+    
+    private func makeStopButton(
+        action: @escaping () -> Void
+    ) -> some View {
+        Button("Stop") {
+            action()
+        }
+        .controlSize(.large)
+        .buttonStyle(.bordered)
+        .environment(\.isEnabled, true)
     }
     
     private var textView: some View {
@@ -71,5 +74,14 @@ public struct ChatInputBar: View {
         })
         .foregroundColor(.primary)
         .dismissKeyboardOnReturn(true)
+        .transition(.opacity.animation(.default))
+    }
+    
+    private var sendActivityDisclosure: some View {
+        ProgressView()
+            .controlSize(.regular)
+            .progressViewStyle(.circular)
+            .font(.body)
+            .foregroundColor(.secondary)
     }
 }

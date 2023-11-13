@@ -23,9 +23,7 @@ public struct ChatMessageList<Data: RandomAccessCollection, Content: View>: View
     var onDelete: ((Item.ID) -> Void)?
     
     var messageDeliveryState: MessageDeliveryState? = nil
-    
-    @State private var didScroll: Bool = false
-    
+        
     init(
         _ data: Data,
         @ViewBuilder content: @escaping (Self, Item) -> Content,
@@ -35,7 +33,7 @@ public struct ChatMessageList<Data: RandomAccessCollection, Content: View>: View
         self.content = content
         self.itemAttributes = attributes
     }
-
+    
     public init(
         _ data: Data,
         @ViewBuilder content: @escaping (Item) -> Content,
@@ -69,59 +67,34 @@ public struct ChatMessageList<Data: RandomAccessCollection, Content: View>: View
             }
         )
     }
-    
+        
     public var body: some View {
-        ScrollViewReader { proxy in
-            scrollView
-                .visible(didScroll)
-                ._SwiftUIX_defaultScrollAnchor(.bottom)
-                .task {
-                    didAppear(scrollView: proxy)
-                }
-                .background(DefaultChatViewBackground())
-        }
-    }
-    
-    private func didAppear(scrollView: ScrollViewProxy) {
-        if let last = data.last {
-            scrollView.scrollTo(last.id, anchor: .bottom)
-            
-            withoutAnimation(after: .milliseconds(50)) {
-                scrollView.scrollTo(last.id, anchor: .bottom)
-                
-                withAnimation(.default) {
-                    didScroll = true
-                }
-            }
-        } else {
-            didScroll = true
-        }
-    }
-    
-    private var scrollView: some View {
         ScrollView(showsIndicators: false) {
-            LazyVStack {
-                ChatMessageStack {
-                    ForEach(data) { item in
-                        if let attributes = itemAttributes(item) {
-                            content(self, item)
-                                .chatMessage(
-                                    id: item.id,
-                                    role: attributes.isSender ? .sender : .recipient
-                                )
-                        } else {
-                            content(self, item)
-                        }
-                    }
-                    .padding(.small)
-                }
-                
-                if messageDeliveryState == .sending {
-                    sendTaskDisclosure
+            scrollContent
+        }
+        ._SwiftUIX_defaultScrollAnchor(.bottom)
+    }
+    
+    private var scrollContent: some View {
+        ChatMessageStack {
+            ForEach(data) { item in
+                if let attributes = itemAttributes(item) {
+                    content(self, item)
+                        .chatMessage(
+                            id: item.id,
+                            role: attributes.isSender ? .sender : .recipient
+                        )
+                } else {
+                    content(self, item)
                 }
             }
-            .padding(.vertical)
+            .padding(.small)
+            
+            if messageDeliveryState == .sending {
+                sendTaskDisclosure
+            }
         }
+        .padding(.vertical)
     }
     
     private var sendTaskDisclosure: some View {

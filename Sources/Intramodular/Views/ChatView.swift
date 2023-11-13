@@ -15,6 +15,10 @@ public struct ChatView<Content: View>: View {
         XStack {
             content
         }
+        .background {
+            DefaultChatViewBackground()
+                .ignoresSafeArea(.all)
+        }
         .modify(forUnwrapped: inputView) { inputView in
             AnyViewModifier {
                 $0._bottomBar {
