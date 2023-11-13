@@ -12,24 +12,21 @@ public struct ChatView<Content: View>: View {
     var properties: ChatViewProperties = nil
     
     public var body: some View {
-        XStack {
-            content
-        }
-        .background {
-            DefaultChatViewBackground()
-                .ignoresSafeArea(.all)
-        }
-        .modify(forUnwrapped: inputView) { inputView in
-            AnyViewModifier {
-                $0._bottomBar {
-                    inputView
-                        .padding(.horizontal)
+        content
+            .frame(.greedy)
+            .modify(forUnwrapped: inputView) { inputView in
+                AnyViewModifier {
+                    $0._bottomBar {
+                        inputView
+                            .padding(.horizontal)
+                    }
                 }
             }
-        }
-        .environment(\._chatContainer, properties)
+            .environment(\._chatContainer, properties)
     }
-    
+}
+
+extension ChatView {
     public func messageDeliveryState(
         _ state: MessageDeliveryState
     ) -> Self {

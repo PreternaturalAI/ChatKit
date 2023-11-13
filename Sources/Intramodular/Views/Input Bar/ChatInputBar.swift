@@ -3,6 +3,7 @@
 //
 
 import SwiftUIX
+import SwiftUIZ
 
 public struct ChatInputBar: View {
     @Environment(\._chatContainer) private var _chatContainer: ChatViewProperties!
@@ -11,13 +12,18 @@ public struct ChatInputBar: View {
     
     private let onSubmit: (String) -> Void
     
-    @Binding private var text: String
+    @_ConstantOrStateOrBinding private var text: String
     
     public init(
-        text: Binding<String>,
+        text: Binding<String>? = nil,
         onSubmit: @escaping (String) -> Void = { _ in }
     ) {
-        self._text = text
+        if let text {
+            self._text = .binding(text)
+        } else {
+            self._text = .state(initialValue: "")
+        }
+        
         self.onSubmit = onSubmit
     }
     
@@ -43,7 +49,8 @@ public struct ChatInputBar: View {
             switch _chatContainer.messageDeliveryState {
                 case .sending:
                     if let stop = _chatContainer.interrupt {
-                        makeStopButton(action: stop)
+                        StopButton(action: stop)
+                            .environment(\.isEnabled, true)
                     } else {
                         sendActivityDisclosure
                     }
@@ -53,25 +60,18 @@ public struct ChatInputBar: View {
         }
     }
     
-    private func makeStopButton(
-        action: @escaping () -> Void
-    ) -> some View {
-        Button("Stop") {
-            action()
-        }
-        .controlSize(.large)
-        .buttonStyle(.bordered)
-        .environment(\.isEnabled, true)
-    }
-    
     private var textView: some View {
-        TextView("Enter a message here", text: $text, onCommit: {
-            onSubmit(text)
-            
-            DispatchQueue.main.async {
-                text = ""
+        TextView(
+            "Enter a message here",
+            text: $text,
+            onCommit: {
+                onSubmit(text)
+                
+                DispatchQueue.main.async {
+                    text = ""
+                }
             }
-        })
+        )
         .foregroundColor(.primary)
         .dismissKeyboardOnReturn(true)
         .transition(.opacity.animation(.default))
@@ -83,5 +83,33 @@ public struct ChatInputBar: View {
             .progressViewStyle(.circular)
             .font(.body)
             .foregroundColor(.secondary)
+    }
+}
+
+extension ChatInputBar {
+    private struct StopButton: View {
+        let action: () -> Void
+        
+        var body: some View {
+            Button {
+                action()
+            } label: {
+                let sideLength: CGFloat = 44
+                
+                ZStack {
+                    RoundedRectangle(cornerRadius: sideLength / 2)
+                        .stroke(Color.primary, lineWidth: 2)
+                    
+                    Rectangle()
+                        .fill(Color.red)
+                        .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
+                        .frame(width: 22, height: 22)
+                }
+                .squareFrame(sideLength: sideLength)
+            }
+            .controlSize(.regular)
+            .buttonStyle(.plain)
+            .transition(.identity.animation(.snappy))
+        }
     }
 }

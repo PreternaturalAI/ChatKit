@@ -4,6 +4,7 @@
 
 import SwiftUIX
 
+@_spi(Internal)
 public struct DefaultChatViewBackground: View {
     public var body: some View {
         #if os(iOS)

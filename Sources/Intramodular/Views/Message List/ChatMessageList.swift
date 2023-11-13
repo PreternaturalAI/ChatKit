@@ -73,6 +73,9 @@ public struct ChatMessageList<Data: RandomAccessCollection, Content: View>: View
             scrollContent
         }
         ._SwiftUIX_defaultScrollAnchor(.bottom)
+        .background {
+            DefaultChatViewBackground()
+        }
     }
     
     private var scrollContent: some View {

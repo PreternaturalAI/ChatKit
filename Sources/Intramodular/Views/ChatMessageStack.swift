@@ -15,26 +15,22 @@ public struct ChatMessageStack<Content: View>: View {
     }
     
     public var body: some View {
-        _IntrinsicGeometryValueReader(\.size.width) { containerWidth in
-            ScrollViewReader { scrollView in
-                Group {
-                    if let containerWidth = containerWidth, containerWidth.isNormal {
-                        makeBody(
-                            containerWidth: containerWidth,
-                            scrollView: scrollView
-                        )
-                    } else {
-                        XSpacer()
-                    }
+        ScrollViewReader { scrollView in
+            _IntrinsicGeometryValueReader(\.size.width) { containerWidth in
+                if let containerWidth {
+                    makeBody(
+                        containerWidth: containerWidth.isNormal ? containerWidth : nil,
+                        scrollView: scrollView
+                    )
+                    .frame(minWidth: 128, maxWidth: .greatestFiniteMagnitude)
                 }
-                .frame(minWidth: 128, maxWidth: .greatestFiniteMagnitude)
             }
         }
         .id(_viewID)
     }
     
     private func makeBody(
-        containerWidth: CGFloat,
+        containerWidth: CGFloat?,
         scrollView: ScrollViewProxy
     ) -> some View {
         _VariadicViewAdapter<Content, _>(content) { subviews in
@@ -106,7 +102,7 @@ private struct _ChatMessageStackStackItem: Identifiable, ViewModifier {
     let role: AnyHashable
     let isLast: Bool
     let scrollView: ScrollViewProxy
-    let containerWidth: CGFloat
+    let containerWidth: CGFloat?
     
     func body(content: Content) -> some View {
         let role = role.base as! ChatItemRoles.SenderRecipient
@@ -115,10 +111,12 @@ private struct _ChatMessageStackStackItem: Identifiable, ViewModifier {
             content
                 .contentShape(Rectangle())
                 .frame(
-                    maxWidth: min(
-                        containerWidth * 0.7,
-                        800
-                    ),
+                    maxWidth: containerWidth.map { containerWidth in
+                        min(
+                            containerWidth * 0.7,
+                            800
+                        )
+                    },
                     alignment: role == .sender ? .trailing : .leading
                 )
                 .frame(

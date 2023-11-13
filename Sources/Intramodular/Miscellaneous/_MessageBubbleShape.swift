@@ -4,6 +4,7 @@
 
 import SwiftUIX
 
+@_spi(Internal)
 public struct _MessageBubbleShape: Shape {
     public enum Direction: Sendable {
         case leading

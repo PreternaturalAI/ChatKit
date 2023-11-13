@@ -4,6 +4,7 @@
 
 import SwiftUIX
 
+@_spi(Internal)
 public struct _ChatBubbleContainer<Content: View>: View {
     private let content: Content
     private let isSender: Bool
