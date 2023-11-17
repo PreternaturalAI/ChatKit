@@ -3,6 +3,7 @@
 //
 
 import SwiftUIX
+import SwiftUIZ
 
 public struct _ChatMessageListItemAttributes: Hashable, Sendable {
     public let isSender: Bool
@@ -79,25 +80,27 @@ public struct ChatMessageList<Data: RandomAccessCollection, Content: View>: View
     }
     
     private var scrollContent: some View {
-        ChatMessageStack {
-            ForEach(data) { item in
-                if let attributes = itemAttributes(item) {
-                    content(self, item)
-                        .chatMessage(
-                            id: item.id,
-                            role: attributes.isSender ? .sender : .recipient
-                        )
-                } else {
-                    content(self, item)
+        IdentifiedChildren {
+            ChatMessageStack {
+                ForEach(data) { item in
+                    if let attributes = itemAttributes(item) {
+                        content(self, item)
+                            .chatMessage(
+                                id: item.id,
+                                role: attributes.isSender ? .sender : .recipient
+                            )
+                    } else {
+                        content(self, item)
+                    }
+                }
+                .padding(.small)
+                
+                if messageDeliveryState == .sending {
+                    sendTaskDisclosure
                 }
             }
-            .padding(.small)
-            
-            if messageDeliveryState == .sending {
-                sendTaskDisclosure
-            }
+            .padding(.vertical)
         }
-        .padding(.vertical)
     }
     
     private var sendTaskDisclosure: some View {

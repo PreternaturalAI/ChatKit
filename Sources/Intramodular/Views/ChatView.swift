@@ -2,7 +2,8 @@
 // Copyright (c) Vatsal Manot
 //
 
-import SwiftUIX
+import SwiftUIZ
+import SwiftUIZ
 
 /// A view that contains a chat interface.
 public struct ChatView<Content: View>: View {
@@ -12,17 +13,18 @@ public struct ChatView<Content: View>: View {
     var properties: ChatViewProperties = nil
     
     public var body: some View {
-        content
-            .frame(.greedy)
-            .modify(forUnwrapped: inputView) { inputView in
-                AnyViewModifier {
-                    $0._bottomBar {
-                        inputView
-                            .padding(.horizontal)
+        IdentityGroup {
+            content
+                .modify(forUnwrapped: inputView) { inputView in
+                    AnyViewModifier {
+                        $0._bottomBar {
+                            inputView
+                                .padding(.horizontal)
+                        }
                     }
                 }
-            }
-            .environment(\._chatContainer, properties)
+                .environment(\._chatContainer, properties)
+        }
     }
 }
 

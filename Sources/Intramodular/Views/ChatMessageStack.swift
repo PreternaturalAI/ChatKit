@@ -22,7 +22,7 @@ public struct ChatMessageStack<Content: View>: View {
                         containerWidth: containerWidth.isNormal ? containerWidth : nil,
                         scrollView: scrollView
                     )
-                    .frame(minWidth: 128, maxWidth: .greatestFiniteMagnitude)
+                    .frame(minWidth: 128, maxWidth: .infinity)
                 }
             }
         }
