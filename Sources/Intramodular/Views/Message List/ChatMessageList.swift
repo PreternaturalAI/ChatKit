@@ -24,7 +24,7 @@ public struct ChatMessageList<Data: RandomAccessCollection, Content: View>: View
     var onDelete: ((Item.ID) -> Void)?
     
     var messageDeliveryState: MessageDeliveryState? = nil
-        
+    
     init(
         _ data: Data,
         @ViewBuilder content: @escaping (Self, Item) -> Content,
@@ -68,9 +68,9 @@ public struct ChatMessageList<Data: RandomAccessCollection, Content: View>: View
             }
         )
     }
-        
+    
     public var body: some View {
-        ScrollView(showsIndicators: false) {
+        ScrollView {
             scrollContent
         }
         ._SwiftUIX_defaultScrollAnchor(.bottom)
@@ -80,27 +80,26 @@ public struct ChatMessageList<Data: RandomAccessCollection, Content: View>: View
     }
     
     private var scrollContent: some View {
-        IdentifiedChildren {
-            ChatMessageStack {
-                ForEach(data) { item in
-                    if let attributes = itemAttributes(item) {
-                        content(self, item)
-                            .chatMessage(
-                                id: item.id,
-                                role: attributes.isSender ? .sender : .recipient
-                            )
-                    } else {
-                        content(self, item)
-                    }
-                }
-                .padding(.small)
-                
-                if messageDeliveryState == .sending {
-                    sendTaskDisclosure
+        ChatMessageStack {
+            ForEach(data) { item in
+                if let attributes = itemAttributes(item) {
+                    content(self, item)
+                        .chatMessage(
+                            id: item.id,
+                            role: attributes.isSender ? .sender : .recipient
+                        )
+                } else {
+                    content(self, item)
                 }
             }
-            .padding(.vertical)
+            .padding(.small)
+            ._noListItemModification()
+            
+            if messageDeliveryState == .sending {
+                sendTaskDisclosure
+            }
         }
+        .padding(.vertical)
     }
     
     private var sendTaskDisclosure: some View {
@@ -130,3 +129,4 @@ extension ChatMessageList {
         }
     }
 }
+
