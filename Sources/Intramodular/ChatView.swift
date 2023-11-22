@@ -3,7 +3,6 @@
 //
 
 import SwiftUIZ
-import SwiftUIZ
 
 /// A view that contains a chat interface.
 public struct ChatView<Content: View>: View {
