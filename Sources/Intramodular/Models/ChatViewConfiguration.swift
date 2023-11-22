@@ -51,10 +51,3 @@ extension EnvironmentValues {
         }
     }
 }
-
-public enum MessageDeliveryState {
-    case sending
-    case errored
-    case idle
-}
-

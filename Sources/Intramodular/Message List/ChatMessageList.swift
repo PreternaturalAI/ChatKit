@@ -5,14 +5,6 @@
 import SwiftUIX
 import SwiftUIZ
 
-public struct _ChatMessageListItemAttributes: Hashable, Sendable {
-    public let isSender: Bool
-    
-    public init(isSender: Bool) {
-        self.isSender = isSender
-    }
-}
-
 public struct ChatMessageList<Data: RandomAccessCollection, Content: View>: View where Data.Element: Equatable & Identifiable {
     public typealias Item = Data.Element
     
@@ -51,7 +43,7 @@ public struct ChatMessageList<Data: RandomAccessCollection, Content: View>: View
         self.init(
             data,
             content: { _list, item in
-                let message = item.toChatMessage()
+                let message = item.__conversion()
                 
                 ChatMessageView(message: message)
                     .onDelete(perform: _list.onDelete.map { onDelete in
@@ -60,11 +52,11 @@ public struct ChatMessageList<Data: RandomAccessCollection, Content: View>: View
                     .onResend(perform: _list.onResend.map { onResend in
                         { onResend(item.id) }
                     })
-                    .chatMessage(id: message.id, role: message.isSender ? .sender : .recipient)
+                    .chatMessage(id: message.id, role: try! message.isSender ? .sender : .recipient)
                     .eraseToAnyView()
             },
             attributes: {
-                _ChatMessageListItemAttributes(isSender: $0.toChatMessage().isSender)
+                _ChatMessageListItemAttributes(isSender: try! $0.__conversion().isSender)
             }
         )
     }

@@ -4,12 +4,12 @@
 
 import MarkdownUI
 import Swallow
-import SwiftUIX
+import SwiftUIZ
 
 public struct ChatMessageView: View {
     @Environment(\._chatItemActions) var _chatItemActions
     
-    private let message: ChatMessage
+    private let message: AnyChatMessage
     private var _actions: ChatItemActions = nil
     
     @State private var isEditing: Bool = false
@@ -19,7 +19,7 @@ public struct ChatMessageView: View {
     }
     
     public init(
-        message: ChatMessage
+        message: AnyChatMessage
     ) {
         self.message = message
     }
@@ -84,7 +84,7 @@ public struct ChatMessageView: View {
 extension ChatMessageView {
     struct TextContent: View {
         @Environment(\._chatItemActions) var supportedActions
-        let message: ChatMessage
+        let message: AnyChatMessage
         
         @Binding var isEditing: Bool
         
@@ -114,11 +114,11 @@ extension ChatMessageView {
             }
             .font(.body)
             .foregroundStyle(.primary)
-            .padding(message.isSender ? .trailing : .leading, .extraSmall)
+            .padding(try! message.isSender ? .trailing : .leading, .extraSmall)
             .frame(minWidth: 44, minHeight: 10)
             .modifier(
                 RegularMessageBubbleStyle(
-                    isSender: message.isSender,
+                    isSender: try! message.isSender,
                     contentExtendsToEdges: false
                 )
             )

@@ -35,7 +35,7 @@ public struct ChatMessageStack<Content: View>: View {
     ) -> some View {
         _VariadicViewAdapter<Content, _>(content) { subviews in
             let lastID = subviews.children.last?[trait: \._chatItemConfiguration]?.id
-                        
+            
             LazyVStack(spacing: 0) {
                 _ForEachSubview(
                     enumerating: subviews,
@@ -52,7 +52,7 @@ public struct ChatMessageStack<Content: View>: View {
                                 containerWidth: containerWidth
                             )
                         )
-                }           
+                }
             }
             .modifier(
                 _ChatMessageStackScrollBehavior(
