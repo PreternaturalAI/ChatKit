@@ -7,10 +7,14 @@ import SwiftUIX
 @_spi(Internal)
 public struct DefaultChatViewBackground: View {
     public var body: some View {
-        #if os(iOS)
+        #if os(iOS) || os(tvOS)
         Color.systemBackground
-        #else
+        #elseif os(macOS)
         Color.secondarySystemBackground
+        #elseif os(visionOS)
+        Color.clear
+        #else
+        _UnimplementedView()
         #endif
     }
     
