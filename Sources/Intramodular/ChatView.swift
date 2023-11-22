@@ -13,18 +13,20 @@ public struct ChatView<Content: View>: View {
     var properties: ChatViewProperties = nil
     
     public var body: some View {
-        XStack {
-            content
-        }
-        .modify(forUnwrapped: inputView) { inputView in
-            AnyViewModifier {
-                $0._bottomBar {
-                    inputView
-                        .padding(.horizontal)
+        ViewAssociationLevel { level in
+            XStack {
+                content
+            }
+            .modify(forUnwrapped: inputView) { inputView in
+                AnyViewModifier {
+                    $0._bottomBar {
+                        inputView
+                            .padding(.horizontal)
+                    }
                 }
             }
+            .environment(\._chatContainer, properties)
         }
-        .environment(\._chatContainer, properties)
     }
 }
 
