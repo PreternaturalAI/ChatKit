@@ -6,7 +6,7 @@ import SwiftUIX
 import SwiftUIZ
 
 public struct ChatInputBar: View {
-    @Environment(\._chatContainer) private var _chatContainer: ChatViewProperties!
+    @Environment(\._chatViewPreferences) private var _chatViewPreferences: _ChatViewPreferences?
     @Environment(\._chatInputBarStyle) private var chatInputBarStyle
     @Environment(\.isEnabled) private var isEnabled
     
@@ -28,15 +28,15 @@ public struct ChatInputBar: View {
     }
     
     public var body: some View {
-        if _chatContainer != nil {
+        if let _chatViewPreferences {
             _WithDynamicPropertyExistential(chatInputBarStyle) {
                 $0.makeBody(
                     configuration: .init(
-                        textInput: _chatContainer.messageDeliveryState != .sending ? textView.eraseToAnyView() : nil,
-                        status: _chatContainer.messageDeliveryState == nil ? nil : statusView.eraseToAnyView()
+                        textInput: _chatViewPreferences.messageDeliveryState != .sending ? textView.eraseToAnyView() : nil,
+                        status: _chatViewPreferences.messageDeliveryState == nil ? nil : statusView.eraseToAnyView()
                     )
                 )
-                .animation(.default, value: _chatContainer.messageDeliveryState)
+                .animation(.default, value: _chatViewPreferences.messageDeliveryState)
             }
         } else {
             _UnimplementedView()
@@ -46,16 +46,18 @@ public struct ChatInputBar: View {
     @ViewBuilder
     public var statusView: some View {
         Group {
-            switch _chatContainer.messageDeliveryState {
-                case .sending:
-                    if let stop = _chatContainer.interrupt {
-                        StopButton(action: stop)
-                            .environment(\.isEnabled, true)
-                    } else {
-                        sendActivityDisclosure
-                    }
-                default:
-                    EmptyView()
+            if let _chatViewPreferences {
+                switch _chatViewPreferences.messageDeliveryState {
+                    case .sending:
+                        if let stop = _chatViewPreferences.interrupt {
+                            StopButton(action: stop)
+                                .environment(\.isEnabled, true)
+                        } else {
+                            sendActivityDisclosure
+                        }
+                    default:
+                        EmptyView()
+                }
             }
         }
     }
@@ -88,7 +90,7 @@ public struct ChatInputBar: View {
 
 extension ChatInputBar {
     private struct StopButton: View {
-        let action: () -> Void
+        let action: Action
         
         var body: some View {
             Button {

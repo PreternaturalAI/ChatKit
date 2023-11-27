@@ -12,6 +12,8 @@ public struct ChatItemConfiguration: Identifiable {
     public var role: any ChatItemRole
 }
 
+// MARK: - Auxiliary
+
 @_ViewTraitKey(for: ChatItemConfiguration.self, named: "_chatItemConfiguration")
 extension _ViewTraitKeys { }
 

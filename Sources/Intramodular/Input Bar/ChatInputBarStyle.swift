@@ -134,6 +134,7 @@ public struct FloatingChatInputBarStyle: ChatInputBarStyle {
     }
 }
 
+#if os(iOS) || os(macOS) || os(tvOS)
 struct _LargeSpotlightLikeTextInputStyle: ViewModifier {
     @FocusState var isTextFieldFocused: Bool
 
@@ -165,6 +166,24 @@ struct _LargeSpotlightLikeTextInputStyle: ViewModifier {
             .scrollDisabled(true)
     }
 }
+#elseif os(visionOS)
+struct _LargeSpotlightLikeTextInputStyle: ViewModifier {
+    @FocusState var isTextFieldFocused: Bool
+    
+    func body(content: Content) -> some View {
+        content
+            .font(Font.title2)
+            .focused($isTextFieldFocused)
+            .padding()
+            .onTapGestureOnBackground {
+                isTextFieldFocused = true
+            }
+            .frame(maxHeight: 512)
+            .fixedSize(horizontal: false, vertical: true)
+            .scrollDisabled(true)
+    }
+}
+#endif
 
 extension ChatInputBarStyle where Self == FloatingChatInputBarStyle {
     public static var floating: Self {

@@ -22,6 +22,11 @@ public struct ChatMessageStack<Content: View>: View {
                         containerWidth: containerWidth.isNormal ? containerWidth : nil,
                         scrollView: scrollView
                     )
+                    .modify(for: .visionOS) { content in
+                        content
+                            .padding(.horizontal)
+                            .padding()
+                    }
                     .frame(minWidth: 128, maxWidth: .infinity)
                 }
             }
@@ -35,6 +40,10 @@ public struct ChatMessageStack<Content: View>: View {
     ) -> some View {
         _VariadicViewAdapter<Content, _>(content) { subviews in
             let lastID = subviews.children.last?[trait: \._chatItemConfiguration]?.id
+            
+            if subviews.isEmpty {
+                contentUnavailableView
+            }
             
             LazyVStack(spacing: 0) {
                 _ForEachSubview(
@@ -64,6 +73,20 @@ public struct ChatMessageStack<Content: View>: View {
                 self._viewID = UUID()
             }
             .animation(.default, value: subviews.children.count)
+        }
+    }
+    
+    @ViewBuilder
+    private var contentUnavailableView: some View {
+        if #available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *) {
+            ContentUnavailableView {
+                Image(systemName: .messageFill)
+                    .font(.largeTitle)
+            } description: {
+                Text("No Messages")
+                    .font(.title)
+            }
+            .padding(.extraLarge)
         }
     }
 }

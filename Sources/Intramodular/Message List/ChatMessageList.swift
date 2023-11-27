@@ -8,14 +8,14 @@ import SwiftUIZ
 public struct ChatMessageList<Data: RandomAccessCollection, Content: View>: View where Data.Element: Equatable & Identifiable {
     public typealias Item = Data.Element
     
+    @Environment(\._chatViewPreferences) var _chatViewPreferences
+
     let data: Data
     let content: (Self, Item) -> Content
     let itemAttributes: (Item) -> _ChatMessageListItemAttributes?
     
     var onResend: ((Item.ID) -> Void)?
     var onDelete: ((Item.ID) -> Void)?
-    
-    var messageDeliveryState: MessageDeliveryState? = nil
     
     init(
         _ data: Data,
@@ -45,7 +45,7 @@ public struct ChatMessageList<Data: RandomAccessCollection, Content: View>: View
             content: { _list, item in
                 let message = item.__conversion()
                 
-                ChatMessageView(message: message)
+                _ChatItemContentView(message: message)
                     .onDelete(perform: _list.onDelete.map { onDelete in
                         { onDelete(item.id) }
                     })
@@ -87,7 +87,7 @@ public struct ChatMessageList<Data: RandomAccessCollection, Content: View>: View
             .padding(.small)
             ._noListItemModification()
             
-            if messageDeliveryState == .sending {
+            if _chatViewPreferences?.messageDeliveryState == .sending {
                 sendTaskDisclosure
             }
         }

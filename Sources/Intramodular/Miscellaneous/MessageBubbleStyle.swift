@@ -36,14 +36,23 @@ public struct RegularMessageBubbleStyle: ViewModifier {
                 )
             )
             .background {
-                Rectangle()
-                    .fill(backgroundStyle)
-                    .mask {
-                        RoundedRectangle(cornerRadius: 18)
-                            ._messageTail(location: isSender ? .trailing : .leading)
-                            .foregroundStyle(Color.black)
+                Group {
+                    Rectangle()
+                        .fill(backgroundStyle)
+                }
+                .mask {
+                    RoundedRectangle(cornerRadius: 18)
+                        ._messageTail(location: isSender ? .trailing : .leading)
+                        .foregroundStyle(Color.black)
+                }
+                .drawingGroup()
+                .modify(for: .visionOS) { content in
+                    if !isSender {
+                        content.opacity(0.75)
+                    } else {
+                        content
                     }
-                    .drawingGroup()
+                }
             }
             .modify(if: contentExtendsToEdges) {
                 $0.shadow(.regularMessageButtonStyle)

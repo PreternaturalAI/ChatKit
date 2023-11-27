@@ -4,7 +4,7 @@
 
 @_spi(Internal) import SwiftUIX
 
-public enum MessageDeliveryState {
+public enum MessageDeliveryState: Hashable {
     case sending
     case errored
     case idle

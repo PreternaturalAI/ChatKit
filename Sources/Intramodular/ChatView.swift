@@ -6,10 +6,12 @@ import SwiftUIZ
 
 /// A view that contains a chat interface.
 public struct ChatView<Content: View>: View {
+    @Environment(\._chatViewPreferences) var _inheritedChatViewPreferences
+    
     let content: Content
     let inputView: AnyView?
     
-    var properties: ChatViewProperties = nil
+    @State public var _chatViewPreferences = _ChatViewPreferences()
     
     public var body: some View {
         ViewAssociationLevel { level in
@@ -24,27 +26,31 @@ public struct ChatView<Content: View>: View {
                     }
                 }
             }
-            .environment(\._chatContainer, properties)
+            .environment(
+                \._chatViewPreferences,
+                 (_inheritedChatViewPreferences ?? .init()).mergingInPlace(with: _chatViewPreferences)
+            )
+        }
+        .onPreferenceChange(_ChatViewPreferences._PreferenceKey.self) {
+            self._chatViewPreferences = $0
         }
     }
 }
 
-extension ChatView {
+extension View {
     public func messageDeliveryState(
         _ state: MessageDeliveryState
-    ) -> Self {
-        then {
-            $0.properties.messageDeliveryState = state
-        }
+    ) -> some View {
+        environment(\._chatViewPreferences, merging: .init(messageDeliveryState: state))
     }
     
-    public func onInterrupt(
+    /*public func onInterrupt(
         perform action: @escaping () -> Void
     ) -> Self {
         then {
             $0.properties.interrupt = action
         }
-    }
+    }*/
 }
 
 // MARK: - Initializers
