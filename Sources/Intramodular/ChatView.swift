@@ -4,6 +4,10 @@
 
 import SwiftUIZ
 
+public enum _ChatViewElement {
+    case items
+}
+
 /// A view that contains a chat interface.
 public struct ChatView<Content: View>: View {
     @Environment(\._chatViewPreferences) var _inheritedChatViewPreferences
@@ -44,13 +48,13 @@ extension View {
         environment(\._chatViewPreferences, merging: .init(messageDeliveryState: state))
     }
     
-    /*public func onInterrupt(
+    public func onChatInterrupt(
         perform action: @escaping () -> Void
-    ) -> Self {
-        then {
-            $0.properties.interrupt = action
+    ) -> some View {
+        withActionTrampoline(for: Action(action)) { action in
+            environment(\._chatViewPreferences, merging: .init(interrupt: action))
         }
-    }*/
+    }
 }
 
 // MARK: - Initializers
