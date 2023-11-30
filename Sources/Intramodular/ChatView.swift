@@ -38,6 +38,7 @@ public struct ChatView<Content: View>: View {
         .onPreferenceChange(_ChatViewPreferences._PreferenceKey.self) {
             self._chatViewPreferences = $0
         }
+        .frame(maxWidth: Screen.width * 0.75)
     }
 }
 

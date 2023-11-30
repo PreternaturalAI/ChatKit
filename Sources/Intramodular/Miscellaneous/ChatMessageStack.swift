@@ -91,7 +91,7 @@ public struct ChatMessageStack<Content: View>: View {
     }
 }
 
-private struct _ChatMessageStackScrollBehavior: ViewModifier {
+struct _ChatMessageStackScrollBehavior: ViewModifier {
     let scrollView: ScrollViewProxy
     let lastItem: AnyChatItemIdentifier?
     
@@ -107,7 +107,8 @@ private struct _ChatMessageStackScrollBehavior: ViewModifier {
                 }
             }
             .withChangePublisher(for: lastItem) { lastItem in
-                lastItem.compactMap({ $0 })
+                lastItem
+                    .compactMap({ $0 })
                     .removeDuplicates()
                     .debounce(for: .milliseconds(200), scheduler: DispatchQueue.main)
                     .sink { id in
@@ -119,7 +120,7 @@ private struct _ChatMessageStackScrollBehavior: ViewModifier {
     }
 }
 
-private struct _ChatMessageStackStackItem: Identifiable, ViewModifier {
+struct _ChatMessageStackStackItem: Identifiable, ViewModifier {
     let index: Int
     let id: AnyChatItemIdentifier
     let role: AnyHashable
@@ -147,6 +148,10 @@ private struct _ChatMessageStackStackItem: Identifiable, ViewModifier {
                     alignment: role == .sender ? .trailing : .leading
                 )
                 .onChange(of: size) { [size] newSize in
+                    guard let size, let newSize else {
+                        return
+                    }
+                    
                     if size.height < newSize.height {
                         scrollView.scrollTo(id, anchor: .bottom)
                     }

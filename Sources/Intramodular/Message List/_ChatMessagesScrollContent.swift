@@ -26,7 +26,7 @@ import SwiftUIX
         ProgressView()
             .controlSize(.small)
             .padding(.leading, .extraSmall)
-            .modifier(RegularMessageBubbleStyle(isSender: false, contentExtendsToEdges: false))
+            .modifier(_iMessageBubbleStyle(isSender: false, isBorderless: false))
             .frame(width: .greedy, alignment: .leading)
             .padding(.horizontal)
     }

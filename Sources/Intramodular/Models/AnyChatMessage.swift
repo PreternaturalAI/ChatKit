@@ -11,7 +11,11 @@ public protocol AnyChatMessageConvertible {
     func __conversion() -> AnyChatMessage
 }
 
-public struct AnyChatMessage: Hashable, Identifiable, AnyChatMessageConvertible {
+public protocol ChatItem: Identifiable<AnyChatItemIdentifier> where ID == AnyChatItemIdentifier {
+    var id: AnyChatItemIdentifier { get }
+}
+
+public struct AnyChatMessage: ChatItem, Hashable, Identifiable, AnyChatMessageConvertible {
     public let id: AnyChatItemIdentifier
     @_HashableExistential
     public var role: any ChatItemRole

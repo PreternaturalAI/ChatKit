@@ -4,7 +4,7 @@
 
 import SwiftUIX
 
-fileprivate struct _MessageTailShape: Shape {
+fileprivate struct _iMessageTailShape: Shape {
     func path(in rect: CGRect) -> Path {
         var path = Path()
         
@@ -61,7 +61,7 @@ fileprivate struct _MessageTailViewModifier: ViewModifier {
     func body(content: Content) -> some View {
         ZStack(alignment: zAlignment) {
             if visible {
-                _MessageTailShape()
+                _iMessageTailShape()
                     .rotation3DEffect(rotationAngle, axis: axis)
                     .frame(width: size, height: size)
             }

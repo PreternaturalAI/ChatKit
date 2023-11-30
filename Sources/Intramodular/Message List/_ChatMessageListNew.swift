@@ -5,7 +5,7 @@
 import SwiftUIX
 import SwiftUIZ
 
-public struct ChatMessageList<Data: RandomAccessCollection, Content: View>: View where Data.Element: Equatable & Identifiable {
+public struct _ChatMessageListNew<Data: RandomAccessCollection, Content: View>: View where Data.Element: Equatable & Identifiable {
     public typealias Item = Data.Element
     
     @Environment(\._chatViewPreferences) private var _chatViewPreferences
@@ -42,25 +42,19 @@ public struct ChatMessageList<Data: RandomAccessCollection, Content: View>: View
     }
     
     public var body: some View {
-        ScrollView {
-            ChatMessageStack {
-                ForEach(data) { item in
-                    content(item)
-                }
-                .padding(.small)
-                
-                if _chatViewPreferences?.messageDeliveryState == .sending {
-                    sendTaskDisclosure
-                }
+        _RawChatItemList {
+            ForEach(data) { item in
+                content(item)
+                    .padding(.small)
             }
-            .padding(.vertical)
+            
+            if _chatViewPreferences?.messageDeliveryState == .sending {
+                sendTaskDisclosure
+            }
         }
         ._SwiftUIX_defaultScrollAnchor(.bottom)
-        .background {
-            _ChatViewBackground()
-        }
     }
-    
+        
     private var sendTaskDisclosure: some View {
         ProgressView()
             .controlSize(.small)
@@ -71,7 +65,7 @@ public struct ChatMessageList<Data: RandomAccessCollection, Content: View>: View
     }
 }
 
-extension ChatMessageList {
+extension _ChatMessageListNew {
     public func onDelete(
         perform fn: @escaping (Item.ID) -> Void
     ) -> Self {

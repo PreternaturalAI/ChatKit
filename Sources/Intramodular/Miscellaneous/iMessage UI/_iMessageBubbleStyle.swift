@@ -7,13 +7,13 @@ import SwiftUIX
 @_spi(Internal)
 @available(tvOS, unavailable)
 @available(watchOS, unavailable)
-public struct RegularMessageBubbleStyle: ViewModifier {
+public struct _iMessageBubbleStyle: ViewModifier {
     private let isSender: Bool
-    private let contentExtendsToEdges: Bool
+    private let isBorderless: Bool
     
-    public init(isSender: Bool, contentExtendsToEdges: Bool) {
+    public init(isSender: Bool, isBorderless: Bool) {
         self.isSender = isSender
-        self.contentExtendsToEdges = contentExtendsToEdges
+        self.isBorderless = isBorderless
     }
     
     private var foregroundStyle: AnyShapeStyle {
@@ -28,7 +28,7 @@ public struct RegularMessageBubbleStyle: ViewModifier {
         content
             .padding(.extraSmall)
             .padding(
-                contentExtendsToEdges ? .zero : EdgeInsets(
+                isBorderless ? .zero : EdgeInsets(
                     top: 4,
                     leading: 6,
                     bottom: 4,
@@ -54,22 +54,13 @@ public struct RegularMessageBubbleStyle: ViewModifier {
                     }
                 }
             }
-            .modify(if: contentExtendsToEdges) {
+            .modify(if: isBorderless) {
                 $0.shadow(.regularMessageButtonStyle)
             }
             .accentColor(isSender ? Color.white : Color.accentColor)
             .foregroundStyle(foregroundStyle)
             .backgroundStyle(backgroundStyle)
             .frame(minWidth: 44, minHeight: 10)
-    }
-    
-    /// Unused.
-    private var shape: AnyShape {
-        if contentExtendsToEdges {
-            return AnyShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-        } else {
-            return AnyShape(_MessageBubbleShape(direction: isSender ? .trailing : .leading))
-        }
     }
 }
 

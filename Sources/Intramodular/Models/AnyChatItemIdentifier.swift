@@ -11,6 +11,10 @@ public struct AnyChatItemIdentifier: Hashable {
     public init(base: AnyHashable) {
         self.base = base
     }
+    
+    public func `as`<T>(_ type: T.Type) -> T {
+        base.base as! T
+    }
 }
 
 // MARK: - Conformances

@@ -5,7 +5,7 @@
 import SwiftUIX
 
 @_spi(Internal)
-public struct _ChatBubbleContainer<Content: View>: View {
+public struct _iMessageBubbleContainer<Content: View>: View {
     private let content: Content
     private let isSender: Bool
 
@@ -20,6 +20,6 @@ public struct _ChatBubbleContainer<Content: View>: View {
             .foregroundStyle(.primary)
             .padding(isSender ? .trailing : .leading, .extraSmall)
             .frame(minWidth: 44, minHeight: 10)
-            .modifier(RegularMessageBubbleStyle(isSender: isSender, contentExtendsToEdges: false))
+            .modifier(_iMessageBubbleStyle(isSender: isSender, isBorderless: false))
     }
 }
