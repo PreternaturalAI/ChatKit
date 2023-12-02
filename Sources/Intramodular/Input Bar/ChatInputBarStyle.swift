@@ -94,7 +94,7 @@ struct MessagesAppChatInputBarStyle: ChatInputBarStyle {
                 .onTapGestureOnBackground {
                     focus()
                 }
-                .onChange(of: isEnabled) { isEnabled in
+                ._onChange(of: isEnabled) { isEnabled in
                     if isEnabled {
                         focus()
                     }

@@ -48,6 +48,7 @@ public struct ChatMessageList<Data: RandomAccessCollection, Content: View>: View
                     content(item)
                 }
                 .padding(.small)
+                .padding(.horizontal, .extraSmall)
                 
                 if _chatViewPreferences?.messageDeliveryState == .sending {
                     sendTaskDisclosure
