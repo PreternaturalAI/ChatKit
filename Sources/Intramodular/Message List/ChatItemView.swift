@@ -45,6 +45,7 @@ public struct ChatItemView: View {
                 )
             )
         }
+        .frame(width: .greedy, alignment: try! item.isSender  ? .trailing : .leading)
         .contentShape(Rectangle())
         .contextMenu {
             _ContextMenu(isEditing: $isEditing)
