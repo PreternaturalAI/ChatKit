@@ -4,7 +4,7 @@
 
 @_spi(Internal) import SwiftUIX
 
-public protocol ChatItemSelectionProtocol {
+public protocol _ChatItemSelectionType {
     var isEmpty: Bool { get }
 }
 

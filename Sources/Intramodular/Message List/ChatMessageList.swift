@@ -41,8 +41,10 @@ public struct ChatMessageList<Data: RandomAccessCollection, Content: View>: View
         )
     }
     
+    @State var showIndicators: Bool = false
+
     public var body: some View {
-        ScrollView {
+        ScrollView(showsIndicators: showIndicators) {
             ChatMessageStack {
                 ForEach(data) { item in
                     content(item)
@@ -50,7 +52,7 @@ public struct ChatMessageList<Data: RandomAccessCollection, Content: View>: View
                 .padding(.small)
                 .padding(.horizontal, .extraSmall)
                 
-                if _chatViewPreferences?.messageDeliveryState == .sending {
+                if _chatViewPreferences?.activityPhaseOfLastItem == .sending {
                     sendTaskDisclosure
                 }
             }
@@ -59,6 +61,11 @@ public struct ChatMessageList<Data: RandomAccessCollection, Content: View>: View
         ._SwiftUIX_defaultScrollAnchor(.bottom)
         .background {
             _ChatViewBackground()
+        }
+        .onAppear {
+            withoutAnimation(after: .seconds(1)) {
+                showIndicators = true
+            }
         }
     }
     

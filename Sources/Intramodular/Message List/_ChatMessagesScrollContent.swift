@@ -15,7 +15,7 @@ import SwiftUIX
             .padding(.small)
             ._noListItemModification()
             
-            if messageDeliveryState == .sending {
+            if activityPhaseOfLastItem == .sending {
                 sendTaskDisclosure
             }
         }

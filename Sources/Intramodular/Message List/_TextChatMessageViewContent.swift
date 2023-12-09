@@ -54,7 +54,7 @@ extension _TextChatMessageViewContent {
     }
     
     var _staticTextView: some View {
-        MarkdownBody(text: message.body)
+        Text(message.body)
             .equatable()
     }
 }

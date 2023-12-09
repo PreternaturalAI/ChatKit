@@ -38,15 +38,15 @@ public struct ChatView<Content: View>: View {
         .onPreferenceChange(_ChatViewPreferences._PreferenceKey.self) {
             self._chatViewPreferences = $0
         }
-        .frame(maxWidth: Screen.width * 0.75)
+        ._measureAndRecordSize(into: $_chatViewPreferences.containerSize)
     }
 }
 
 extension View {
-    public func messageDeliveryState(
-        _ state: MessageDeliveryState
+    public func activityPhaseOfLastItem(
+        _ state: ChatItemActivityPhase
     ) -> some View {
-        environment(\._chatViewPreferences, merging: .init(messageDeliveryState: state))
+        environment(\._chatViewPreferences, merging: .init(activityPhaseOfLastItem: state))
     }
     
     public func onChatInterrupt(

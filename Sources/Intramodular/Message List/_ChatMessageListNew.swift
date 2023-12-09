@@ -29,12 +29,27 @@ public struct _ChatMessageListNew<Data: RandomAccessCollection, Content: View>: 
         self.init(
             data,
             content: { item in
-                let item = item.__conversion()
-                
-                withEnvironmentValue(\._chatViewActions) { actions in
-                    ChatItemView(item: item)
-                        .chatMessage(id: item.id, role: try! item.isSender ? .sender : .recipient)
-                        .environment(\._chatItemViewActions, .init(from: actions, id: item.id))
+                withEnvironmentValue(\._chatViewPreferences) { chat in
+                    let item = item.__conversion()
+                    
+                    Group {
+                        withEnvironmentValue(\._chatViewActions) { actions in
+                            ChatItemView(item: item)
+                                .chatMessage(id: item.id, role: try! item.isSender ? .sender : .recipient)
+                                .environment(\._chatItemViewActions, .init(from: actions, id: item.id))
+                                .cocoaListItem(id: item.id)
+                        }
+                    }
+                    .modifier(
+                        _ChatMessageStackStackItem(
+                            index: nil,
+                            id: item.id,
+                            role: item.role.erasedAsAnyHashable,
+                            isLast: nil,
+                            scrollView: nil,
+                            containerWidth: chat?.containerSize?.width
+                        )
+                    )
                 }
                 .eraseToAnyView()
             }
@@ -42,15 +57,15 @@ public struct _ChatMessageListNew<Data: RandomAccessCollection, Content: View>: 
     }
     
     public var body: some View {
-        _RawChatItemList {
+        CocoaList {
             ForEach(data) { item in
                 content(item)
                     .padding(.small)
             }
             
-            if _chatViewPreferences?.messageDeliveryState == .sending {
+            /*if _chatViewPreferences?.activityPhaseOfLastItem == .sending {
                 sendTaskDisclosure
-            }
+            }*/
         }
         ._SwiftUIX_defaultScrollAnchor(.bottom)
     }

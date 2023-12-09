@@ -4,8 +4,8 @@
 
 @_spi(Internal) import SwiftUIX
 
-public enum MessageDeliveryState: Hashable {
+public enum ChatItemActivityPhase: Hashable {
+    case idle
     case sending
     case errored
-    case idle
 }

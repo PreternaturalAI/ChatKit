@@ -5,6 +5,8 @@
 @_spi(Internal) import SwiftUIX
 
 public struct ChatMessageStack<Content: View>: View {
+    @Environment(\._chatViewPreferences) var chatView
+    
     private let content: Content
     
     /// A hack used to reset the view's identity.
@@ -16,26 +18,20 @@ public struct ChatMessageStack<Content: View>: View {
     
     public var body: some View {
         ScrollViewReader { scrollView in
-            _IntrinsicGeometryValueReader(\.size.width) { containerWidth in
-                if let containerWidth {
-                    makeBody(
-                        containerWidth: containerWidth.isNormal ? containerWidth : nil,
-                        scrollView: scrollView
-                    )
+            if chatView != nil {
+                makeBody(scrollView: scrollView)
                     .modify(for: .visionOS) { content in
                         content
                             .padding(.horizontal)
                             .padding()
                     }
                     .frame(minWidth: 128, maxWidth: .infinity)
-                }
             }
         }
         .id(_viewID)
     }
     
     private func makeBody(
-        containerWidth: CGFloat?,
         scrollView: ScrollViewProxy
     ) -> some View {
         _VariadicViewAdapter<Content, _>(content) { subviews in
@@ -58,7 +54,7 @@ public struct ChatMessageStack<Content: View>: View {
                                 role: configuration.role.erasedAsAnyHashable,
                                 isLast: index == subviews.children.count,
                                 scrollView: scrollView,
-                                containerWidth: containerWidth
+                                containerWidth: chatView?.containerSize?.width
                             )
                         )
                 }
@@ -97,13 +93,17 @@ struct _ChatMessageStackScrollBehavior: ViewModifier {
     
     func body(content: Content) -> some View {
         content
-            .onAppear {
+            .onAppearOnce {
                 guard let lastItem else {
                     return
                 }
                 
-                withAnimation(after: .milliseconds(200)) {
+                withoutAnimation(after: .milliseconds(200)) {
                     scrollView.scrollTo(lastItem, anchor: .bottom)
+                    
+                    withoutAnimation(after: .milliseconds(200)) {
+                        scrollView.scrollTo(lastItem, anchor: .bottom)
+                    }
                 }
             }
             .withChangePublisher(for: lastItem) { lastItem in
@@ -121,41 +121,33 @@ struct _ChatMessageStackScrollBehavior: ViewModifier {
 }
 
 struct _ChatMessageStackStackItem: Identifiable, ViewModifier {
-    let index: Int
+    let index: Int?
     let id: AnyChatItemIdentifier
     let role: AnyHashable
-    let isLast: Bool
-    let scrollView: ScrollViewProxy
+    let isLast: Bool?
+    let scrollView: ScrollViewProxy?
     let containerWidth: CGFloat?
     
     func body(content: Content) -> some View {
         let role = role.base as! ChatItemRoles.SenderRecipient
         
-        IntrinsicSizeReader { size in
-            content
-                .contentShape(Rectangle())
-                .frame(
-                    maxWidth: containerWidth.map { containerWidth in
-                        min(
-                            containerWidth * 0.7,
-                            800
-                        )
-                    },
-                    alignment: role == .sender ? .trailing : .leading
-                )
-                .frame(
-                    width: .greedy,
-                    alignment: role == .sender ? .trailing : .leading
-                )
-                .onChange(of: size) { [size] newSize in
-                    guard let size, let newSize else {
-                        return
-                    }
-                    
-                    if size.height < newSize.height {
-                        scrollView.scrollTo(id, anchor: .bottom)
-                    }
-                }
-        }
+        content
+            .contentShape(Rectangle())
+            .frame(
+                maxWidth: containerWidth.map { containerWidth in
+                    min(
+                        containerWidth * 0.7,
+                        800
+                    )
+                },
+                alignment: role == .sender ? .trailing : .leading
+            )
+            .frame(
+                width: .greedy,
+                alignment: role == .sender ? .trailing : .leading
+            )
+            .onChangeOfFrame { _ in
+                scrollView?.scrollTo(id, anchor: .bottom)
+            }
     }
 }

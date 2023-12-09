@@ -32,11 +32,11 @@ public struct ChatInputBar: View {
             _WithDynamicPropertyExistential(chatInputBarStyle) {
                 $0.makeBody(
                     configuration: .init(
-                        textInput: _chatViewPreferences.messageDeliveryState != .sending ? textView.eraseToAnyView() : nil,
-                        status: _chatViewPreferences.messageDeliveryState == nil ? nil : statusView.eraseToAnyView()
+                        textInput: _chatViewPreferences.activityPhaseOfLastItem != .sending ? textView.eraseToAnyView() : nil,
+                        status: _chatViewPreferences.activityPhaseOfLastItem == nil ? nil : statusView.eraseToAnyView()
                     )
                 )
-                .animation(.default, value: _chatViewPreferences.messageDeliveryState)
+                .animation(.default, value: _chatViewPreferences.activityPhaseOfLastItem)
             }
         } else {
             _UnimplementedView()
@@ -47,7 +47,7 @@ public struct ChatInputBar: View {
     public var statusView: some View {
         Group {
             if let _chatViewPreferences {
-                switch _chatViewPreferences.messageDeliveryState {
+                switch _chatViewPreferences.activityPhaseOfLastItem {
                     case .sending:
                         if let stop = _chatViewPreferences.interrupt {
                             StopButton(action: stop)

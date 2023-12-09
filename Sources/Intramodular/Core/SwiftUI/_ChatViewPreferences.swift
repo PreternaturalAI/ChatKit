@@ -6,10 +6,11 @@ import Swallow
 import SwiftUIX
 import SwiftUIZ
 
-public struct _ChatViewPreferences: Hashable {
+public struct _ChatViewPreferences: Equatable {
     var itemActivities: [AnyChatItemIdentifier: _ChatItemActivity] = [:]
-    var messageDeliveryState: MessageDeliveryState?
+    var activityPhaseOfLastItem: ChatItemActivityPhase?
     var interrupt: Action?
+    var containerSize: CGSize?
 }
 
 // MARK: - Conformances
@@ -17,8 +18,9 @@ public struct _ChatViewPreferences: Hashable {
 extension _ChatViewPreferences: MergeOperatable {
     public mutating func mergeInPlace(with other: Self) {
         self.itemActivities.merge(other.itemActivities, uniquingKeysWith: { lhs, rhs in rhs })
-        self.messageDeliveryState ??= other.messageDeliveryState
+        self.activityPhaseOfLastItem ??= other.activityPhaseOfLastItem
         self.interrupt ??= other.interrupt
+        self.containerSize ??= other.containerSize
     }
 }
 
