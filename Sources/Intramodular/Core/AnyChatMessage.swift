@@ -4,17 +4,6 @@
 
 import Swallow
 
-public typealias ChatMessageConvertible = AnyChatMessageConvertible
-
-/// A type that can be converted to a type-erased chat message.
-public protocol AnyChatMessageConvertible {
-    func __conversion() -> AnyChatMessage
-}
-
-public protocol ChatItem: Identifiable<AnyChatItemIdentifier> where ID == AnyChatItemIdentifier {
-    var id: AnyChatItemIdentifier { get }
-}
-
 public struct AnyChatMessage: ChatItem, Hashable, Identifiable, AnyChatMessageConvertible {
     public let id: AnyChatItemIdentifier
     @_HashableExistential

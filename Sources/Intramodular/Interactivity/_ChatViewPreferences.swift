@@ -6,16 +6,30 @@ import Swallow
 import SwiftUIX
 import SwiftUIZ
 
-public struct _ChatViewPreferences: Equatable {
+@_spi(Internal)
+public struct _ChatViewInteractions: MergeOperatable {
+    public enum Selection {
+        case single(ChatItemSelection)
+        case multiple(ChatItemMultipleSelection)
+    }
+    
+    public var selection: Selection?
+    
+    public init(nilLiteral: ()) {
+        
+    }
+    
+    public mutating func mergeInPlace(with other: Self) {
+        self.selection = other.selection
+    }
+}
+
+public struct _ChatViewPreferences: Equatable, MergeOperatable {
     var itemActivities: [AnyChatItemIdentifier: _ChatItemActivity] = [:]
     var activityPhaseOfLastItem: ChatItemActivityPhase?
     var interrupt: Action?
     var containerSize: CGSize?
-}
 
-// MARK: - Conformances
-
-extension _ChatViewPreferences: MergeOperatable {
     public mutating func mergeInPlace(with other: Self) {
         self.itemActivities.merge(other.itemActivities, uniquingKeysWith: { lhs, rhs in rhs })
         self.activityPhaseOfLastItem ??= other.activityPhaseOfLastItem

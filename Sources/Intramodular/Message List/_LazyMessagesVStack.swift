@@ -4,7 +4,7 @@
 
 @_spi(Internal) import SwiftUIX
 
-public struct ChatMessageStack<Content: View>: View {
+public struct _LazyMessagesVStack<Content: View>: View {
     @Environment(\._chatViewPreferences) var chatView
     
     private let content: Content
@@ -48,7 +48,7 @@ public struct ChatMessageStack<Content: View>: View {
                 ) { (index, subview, configuration) in
                     subview
                         .modifier(
-                            _ChatMessageStackStackItem(
+                            __LazyMessagesVStackStackItem(
                                 index: index,
                                 id: configuration.id,
                                 role: configuration.role.erasedAsAnyHashable,
@@ -60,7 +60,7 @@ public struct ChatMessageStack<Content: View>: View {
                 }
             }
             .modifier(
-                _ChatMessageStackScrollBehavior(
+                __LazyMessagesVStackScrollBehavior(
                     scrollView: scrollView,
                     lastItem: lastID
                 )
@@ -87,7 +87,7 @@ public struct ChatMessageStack<Content: View>: View {
     }
 }
 
-struct _ChatMessageStackScrollBehavior: ViewModifier {
+struct __LazyMessagesVStackScrollBehavior: ViewModifier {
     let scrollView: ScrollViewProxy
     let lastItem: AnyChatItemIdentifier?
     
@@ -120,7 +120,7 @@ struct _ChatMessageStackScrollBehavior: ViewModifier {
     }
 }
 
-struct _ChatMessageStackStackItem: Identifiable, ViewModifier {
+struct __LazyMessagesVStackStackItem: Identifiable, ViewModifier {
     let index: Int?
     let id: AnyChatItemIdentifier
     let role: AnyHashable

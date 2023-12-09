@@ -9,7 +9,11 @@ public struct AnyChatItemIdentifier: Hashable {
     public var base: AnyHashable
     
     public init(base: AnyHashable) {
-        self.base = base
+        if let base = base.base as? AnyChatItemIdentifier {
+            self = base
+        } else {
+            self.base = base
+        }
     }
     
     public func `as`<T>(_ type: T.Type) -> T {

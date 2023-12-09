@@ -5,8 +5,9 @@
 import SwiftUIX
 import SwiftUIZ
 
+/// A SwiftUI `List` based approach.
 @frozen
-public struct _RawChatItemList<Content: View>: View {
+public struct _ChatMessageListB<Content: View>: View {
     let content: Content
     
     public init(@ViewBuilder content: () -> Content) {
@@ -17,7 +18,7 @@ public struct _RawChatItemList<Content: View>: View {
         ScrollViewReader { scrollView in
             _VariadicViewAdapter(content) { content in
                 let lastItemID: AnyChatItemIdentifier? = content.children.last?[trait: \._chatItemConfiguration]?.id
-
+                
                 IntrinsicSizeReader { size in
                     List {
                         _ForEachSubview(
@@ -26,7 +27,7 @@ public struct _RawChatItemList<Content: View>: View {
                         ) { (index, subview, configuration) in
                             subview
                                 .modifier(
-                                    _ChatMessageStackStackItem(
+                                    __LazyMessagesVStackStackItem(
                                         index: index,
                                         id: configuration.id,
                                         role: configuration.role.erasedAsAnyHashable,
@@ -43,7 +44,7 @@ public struct _RawChatItemList<Content: View>: View {
                 ._noListItemModification()
                 .listStyle(.plain)
                 .modifier(
-                    _ChatMessageStackScrollBehavior(
+                    __LazyMessagesVStackScrollBehavior(
                         scrollView: scrollView,
                         lastItem: lastItemID
                     )

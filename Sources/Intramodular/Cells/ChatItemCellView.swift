@@ -6,15 +6,15 @@ import MarkdownUI
 import Swallow
 import SwiftUIZ
 
-public struct ChatItemView: View {
+public struct ChatItemCellView: View {
     @Environment(\._chatItemViewActions) var _chatItemViewActions
     
     private let item: AnyChatMessage
-    private var _actions: _ChatItemViewActions = nil
+    private var _actions: _ChatItemCellViewActions = nil
     
     @State private var isEditing: Bool = false
     
-    fileprivate var actions: _ChatItemViewActions {
+    fileprivate var actions: _ChatItemCellViewActions {
         _chatItemViewActions.mergingInPlace(with: _actions)
     }
     
@@ -57,7 +57,7 @@ public struct ChatItemView: View {
     }
 }
 
-extension ChatItemView {
+extension ChatItemCellView {
     fileprivate struct _ContextMenu: View {
         @Environment(\._chatItemViewActions) var actions
         
@@ -85,7 +85,7 @@ extension ChatItemView {
     }
 }
 
-extension ChatItemView {
+extension ChatItemCellView {
     public func onEdit(
         perform fn: ((String) -> Void)?
     ) -> Self {

@@ -3,6 +3,7 @@
 //
 
 import MarkdownUI
+@_spi(Internal) import SwiftUIX
 import SwiftUIZ
 
 struct _TextChatMessageViewContent: View {
@@ -41,8 +42,12 @@ struct _TextChatMessageViewContent: View {
 
 #if os(iOS) || os(macOS) || os(tvOS) || os(watchOS)
 extension _TextChatMessageViewContent {
-    struct MarkdownBody: Equatable, View {
+    private struct MarkdownBody: Equatable, View {
         let text: String
+        
+        init(_ text: String) {
+            self.text = text
+        }
         
         var body: some View {
             VStack(alignment: .leading, spacing: 0) {
@@ -54,8 +59,8 @@ extension _TextChatMessageViewContent {
     }
     
     var _staticTextView: some View {
-        Text(message.body)
-            .equatable()
+        MarkdownBody(message.body)
+            .equatable(by: message.body)
     }
 }
 #elseif os(visionOS)
