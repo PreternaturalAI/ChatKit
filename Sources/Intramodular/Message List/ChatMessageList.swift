@@ -18,11 +18,11 @@ public struct ChatMessageList<Data: RandomAccessCollection>: View where Data.Ele
     }
     
     public var implementation: Implementation {
-#if os(macOS)
+        #if os(macOS)
         .c
-#elseif os(iOS) || os(visionOS)
+        #elseif os(iOS) || os(visionOS)
         .a
-#endif
+        #endif
     }
 
     init<C: View>(_content: () -> C) {
@@ -50,6 +50,25 @@ public struct ChatMessageList<Data: RandomAccessCollection>: View where Data.Ele
 // MARK: - Initializers
 
 extension ChatMessageList {
+    public init(
+        _ data: Data
+    ) where Data.Element: ChatMessageConvertible {
+        self.init {
+            ForEach(data) { item in
+                let item = item.__conversion()
+                
+                withEnvironmentValue(\._chatViewActions) { actions in
+                    ChatItemCellView(item: item)
+                        .chatItem(
+                            id: item.id,
+                            role: item.role
+                        )
+                        .environment(\._chatItemViewActions, .init(from: actions, id: item.id))
+                }
+            }
+        }
+    }
+
     public init<Content: View>(
         _ data: Data,
         content: @escaping (Data.Element) -> Content
@@ -66,7 +85,6 @@ extension ChatMessageList {
                         )
                         .environment(\._chatItemViewActions, .init(from: actions, id: chatItem.id))
                 }
-                .eraseToAnyView()
             }
         }
     }

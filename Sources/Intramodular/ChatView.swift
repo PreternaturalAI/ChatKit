@@ -2,6 +2,7 @@
 // Copyright (c) Vatsal Manot
 //
 
+@_spi(Internal) import SwiftUIX
 import SwiftUIZ
 
 public enum _ChatViewElement {
@@ -30,15 +31,12 @@ public struct ChatView<Content: View>: View {
                     }
                 }
             }
-            .environment(
-                \._chatViewPreferences,
-                 (_inheritedChatViewPreferences ?? .init()).mergingInPlace(with: _chatViewPreferences)
-            )
+            .environment(\._chatViewPreferences, (_inheritedChatViewPreferences ?? .init()).mergingInPlace(with: _chatViewPreferences))
+            .onPreferenceChange(_ChatViewPreferences._PreferenceKey.self) {
+                self._chatViewPreferences = $0
+            }
+            ._measureAndRecordSize(into: $_chatViewPreferences.containerSize)
         }
-        .onPreferenceChange(_ChatViewPreferences._PreferenceKey.self) {
-            self._chatViewPreferences = $0
-        }
-        ._measureAndRecordSize(into: $_chatViewPreferences.containerSize)
     }
 }
 

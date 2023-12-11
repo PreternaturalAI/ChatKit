@@ -52,9 +52,9 @@ extension _TextChatMessageViewContent {
         var body: some View {
             VStack(alignment: .leading, spacing: 0) {
                 Markdown(text)
-                    .markdownTheme(.docC)
-                    .textSelection(.enabled)
             }
+            .markdownTheme(.docC)
+            .textSelection(.enabled)
         }
     }
     

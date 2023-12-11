@@ -68,7 +68,6 @@ public struct _LazyMessagesVStack<Content: View>: View {
             .onChange(of: subviews.isEmpty) { _ in
                 self._viewID = UUID()
             }
-            .animation(.default, value: subviews.children.count)
         }
     }
     
@@ -133,21 +132,16 @@ struct __LazyMessagesVStackStackItem: Identifiable, ViewModifier {
         
         content
             .contentShape(Rectangle())
+            .onChangeOfFrame { _ in
+                scrollView?.scrollTo(id, anchor: .bottom)
+            }
             .frame(
-                maxWidth: containerWidth.map { containerWidth in
-                    min(
-                        containerWidth * 0.7,
-                        800
-                    )
-                },
+                maxWidth: min((containerWidth ?? (800 / 0.7)) * 0.7, 800),
                 alignment: role == .sender ? .trailing : .leading
             )
             .frame(
                 width: .greedy,
                 alignment: role == .sender ? .trailing : .leading
             )
-            .onChangeOfFrame { _ in
-                scrollView?.scrollTo(id, anchor: .bottom)
-            }
     }
 }
