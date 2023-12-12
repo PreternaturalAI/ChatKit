@@ -11,17 +11,26 @@ public struct ChatMessageList<Data: RandomAccessCollection>: View where Data.Ele
     private let _content : AnyView
     private var _chatViewActions = _ChatViewActions()
     
-    public enum Implementation {
+    private enum ImplementationStrategy {
         case a
         case b
         case c
     }
     
-    public var implementation: Implementation {
+    /// Whether `SwiftUI`'s official `List` implementation is garbage.
+    private var _isOfficialImplementationStillFucked: Bool {
+        true
+    }
+    
+    private var implementationStrategy: ImplementationStrategy {
         #if os(macOS)
-        .c
+        if _isOfficialImplementationStillFucked {
+            ImplementationStrategy.c // SwiftUIX.CocoaList
+        } else {
+            ImplementationStrategy.b // SwiftUI.List
+        }
         #elseif os(iOS) || os(visionOS)
-        .a
+        ImplementationStrategy.a // LazyVStack + ScrollView
         #endif
     }
 
@@ -30,7 +39,7 @@ public struct ChatMessageList<Data: RandomAccessCollection>: View where Data.Ele
     }
                 
     public var body: some View {
-        switch implementation {
+        switch implementationStrategy {
             case .a:
                 _ChatMessageListA {
                     _content
