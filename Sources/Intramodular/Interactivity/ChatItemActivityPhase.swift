@@ -7,5 +7,9 @@
 public enum ChatItemActivityPhase: Hashable {
     case idle
     case sending
-    case errored
+    case failed(AnyError)
+    
+    public static func failed(_ error: Swift.Error) -> Self {
+        Self.failed(AnyError(erasing: error))
+    }
 }

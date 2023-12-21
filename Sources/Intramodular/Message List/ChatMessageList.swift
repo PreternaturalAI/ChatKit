@@ -67,7 +67,7 @@ extension ChatMessageList {
                 let item = item.__conversion()
                 
                 withEnvironmentValue(\._chatViewActions) { actions in
-                    ChatItemCellView(item: item)
+                    ChatItemCell(item: item)
                         .chatItem(
                             id: item.id,
                             role: item.role

@@ -29,7 +29,10 @@ struct _TextChatMessageViewContent: View {
             } else {
                 if message.body.isEmpty {
                     Text("This message has no content.")
+                        .font(.body)
                         .foregroundColor(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .lineLimit(nil)
                 } else {
                     _staticTextView
                 }
@@ -52,6 +55,9 @@ extension _TextChatMessageViewContent {
         var body: some View {
             VStack(alignment: .leading, spacing: 0) {
                 Markdown(text)
+                    .font(.body)
+                    .foregroundColor(.primary)
+                    .lineLimit(nil)
             }
             .markdownTheme(.docC)
             .textSelection(.enabled)
@@ -71,45 +77,6 @@ extension _TextChatMessageViewContent {
             .font(.body.scaled(by: 1.5))
             .contentTransition(.opacity)
             .animation(.default, value: message.body)
-    }
-}
-
-extension Font {
-    public func scaled(by ratio: CGFloat) -> Self {
-        (try? toAppKitOrUIKitFont().scaled(by: ratio)).map({ Font($0) }) ?? self
-    }
-}
-#endif
-
-
-#if os(iOS) || os(tvOS) || os(visionOS)
-extension AppKitOrUIKitFont {
-    func scaled(
-        by ratio: CGFloat
-    ) -> AppKitOrUIKitFont {
-        let newPointSize = pointSize * ratio
-        
-        return AppKitOrUIKitFont(
-            descriptor: fontDescriptor,
-            size: newPointSize
-        )
-    }
-}
-#elseif os(macOS)
-extension AppKitOrUIKitFont {
-    func scaled(by ratio: CGFloat) -> NSFont {
-        let newPointSize = pointSize * ratio
-        
-        guard let font = NSFont(
-            descriptor: fontDescriptor,
-            size: newPointSize
-        ) else {
-            assertionFailure()
-            
-            return self
-        }
-        
-        return font
     }
 }
 #endif

@@ -6,7 +6,7 @@ import Swallow
 import SwiftUIX
 import SwiftUIZ
 
-struct _ChatItemCellViewActions: Initiable, ExpressibleByNilLiteral {
+struct _ChatItemCellActions: Initiable, ExpressibleByNilLiteral {
     var onEdit: ((AnyChatItemContent) -> Void)?
     var onDelete: (() -> Void)?
     var onResend: (() -> Void)?
@@ -68,7 +68,7 @@ public struct _ChatViewActions: Initiable, MergeOperatable {
 
 // MARK: - Conformances
 
-extension _ChatItemCellViewActions: MergeOperatable {
+extension _ChatItemCellActions: MergeOperatable {
     public mutating func mergeInPlace(with other: Self) {
         self.onEdit = other.onEdit
         self.onDelete = other.onDelete
@@ -83,5 +83,5 @@ extension EnvironmentValues {
     var _chatViewActions = _ChatViewActions()
 
     @EnvironmentValue
-    var _chatItemViewActions = _ChatItemCellViewActions()
+    var _chatItemViewActions = _ChatItemCellActions()
 }

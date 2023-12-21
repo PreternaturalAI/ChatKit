@@ -20,6 +20,16 @@ public struct AnyChatMessage: ChatItem, Hashable, Identifiable, AnyChatMessageCo
         self.body = body
     }
     
+    public init<ID: Hashable>(
+        id: ID,
+        role: any ChatItemRole,
+        body: String
+    ) {
+        self.id = .init(base: id)
+        self.role = role
+        self.body = body
+    }
+    
     public init(_ text: String) {
         self.init(
             id: .init(base: UUID()),
