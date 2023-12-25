@@ -18,7 +18,7 @@ public struct _ChatMessageListC<Content: View>: View {
     public var body: some View {
         CocoaList {
             _VariadicViewAdapter(content) { content in
-                _ForEachSubview(content, trait: \._chatItemConfiguration) { subview, item in
+                _ForEachSubview(enumerating: content, trait: \._chatItemConfiguration) { (index: Int, subview: _VariadicViewChildren.Subview, item: _ChatItemConfiguration) in
                     _ChatMessageRowContainer {
                         withEnvironmentValue(\._chatViewActions) { actions in
                             subview
@@ -27,7 +27,7 @@ public struct _ChatMessageListC<Content: View>: View {
                                 .cocoaListItem(id: item.id)
                                 .modifier(
                                     __LazyMessagesVStackStackItem(
-                                        index: nil,
+                                        index: index,
                                         id: item.id,
                                         role: item.role.erasedAsAnyHashable,
                                         isLast: nil,
