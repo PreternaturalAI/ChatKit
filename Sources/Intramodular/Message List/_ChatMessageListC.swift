@@ -35,7 +35,6 @@ public struct _ChatMessageListC<Content: View>: View {
                                         containerWidth: chatView?.containerSize?.width
                                     )
                                 )
-                                .padding(.small)
                         }
                     }
                 }

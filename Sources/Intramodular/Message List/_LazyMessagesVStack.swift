@@ -143,5 +143,7 @@ struct __LazyMessagesVStackStackItem: Identifiable, ViewModifier {
                 width: .greedy,
                 alignment: role == .sender ? .trailing : .leading
             )
+            .padding(.top, index == 0 ? 12 : 0)
+            .padding(.bottom, 4)
     }
 }
