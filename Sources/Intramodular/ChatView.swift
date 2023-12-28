@@ -54,6 +54,13 @@ extension View {
             environment(\._chatViewPreferences, merging: .init(interrupt: action))
         }
     }
+    
+    @available(*, deprecated, renamed: "activityPhaseOfLastItem")
+    public func messageDeliveryState(
+        _ state: ChatItemActivityPhase
+    ) -> some View {
+        activityPhaseOfLastItem(state)
+    }
 }
 
 // MARK: - Initializers
