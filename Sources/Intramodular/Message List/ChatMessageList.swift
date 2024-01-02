@@ -19,7 +19,7 @@ public struct ChatMessageList<Data: RandomAccessCollection>: View where Data.Ele
     
     /// Whether `SwiftUI`'s official `List` implementation is garbage.
     private var _isOfficialImplementationStillFucked: Bool {
-        false
+        true
     }
     
     private var implementationStrategy: ImplementationStrategy {
