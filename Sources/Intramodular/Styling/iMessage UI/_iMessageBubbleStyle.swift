@@ -35,25 +35,7 @@ public struct _iMessageBubbleStyle: ViewModifier {
                     trailing: 6
                 )
             )
-            .background {
-                Group {
-                    Rectangle()
-                        .fill(backgroundStyle)
-                }
-                .mask {
-                    RoundedRectangle(cornerRadius: 18)
-                        ._messageTail(location: isSender ? .trailing : .leading)
-                        .foregroundStyle(Color.black)
-                }
-                .drawingGroup()
-                .modify(for: .visionOS) { content in
-                    if !isSender {
-                        content.opacity(0.75)
-                    } else {
-                        content
-                    }
-                }
-            }
+            .background(backgroundView)
             .modify(if: isBorderless) {
                 $0.shadow(.regularMessageButtonStyle)
             }
@@ -61,6 +43,26 @@ public struct _iMessageBubbleStyle: ViewModifier {
             .foregroundStyle(foregroundStyle)
             .backgroundStyle(backgroundStyle)
             .frame(minWidth: 44, minHeight: 10)
+    }
+    
+    private var backgroundView: some View {
+        Group {
+            Rectangle()
+                .fill(backgroundStyle)
+        }
+        .mask {
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                ._addMessageTail(location: isSender ? .trailing : .leading)
+                .foregroundStyle(Color.black)
+        }
+        .drawingGroup(opaque: true)
+        .modify(for: .visionOS) { content in
+            if !isSender {
+                content.opacity(0.75)
+            } else {
+                content
+            }
+        }
     }
 }
 

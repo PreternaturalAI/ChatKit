@@ -40,6 +40,9 @@ public struct _ChatMessageListC<Content: View>: View {
                 }
             }
         }
+        ._overridePreferences {
+            $0.cell.viewHostingOptions.detachHostingView = false
+        }
         ._SwiftUIX_defaultScrollAnchor(.bottom)
     }
 }

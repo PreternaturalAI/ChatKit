@@ -92,7 +92,7 @@ fileprivate struct _MessageTailViewModifier: ViewModifier {
 }
 
 extension View {
-    func _messageTail(
+    func _addMessageTail(
         _ visible: Bool = true,
         location: HorizontalAlignment,
         size: CGFloat = 18

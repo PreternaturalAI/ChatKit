@@ -8,6 +8,7 @@ import SwiftUIZ
 
 struct _TextChatMessageViewContent: View {
     @Environment(\._chatItemViewActions) var supportedActions
+    
     let message: AnyChatMessage
     
     @Binding var isEditing: Bool
@@ -31,7 +32,6 @@ struct _TextChatMessageViewContent: View {
                     Text("This message has no content.")
                         .font(.body)
                         .foregroundColor(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
                         .lineLimit(nil)
                 } else {
                     _staticTextView
@@ -40,6 +40,7 @@ struct _TextChatMessageViewContent: View {
         }
         .font(.body)
         .foregroundStyle(.primary)
+        .textSelection(.enabled)
     }
 }
 
@@ -60,13 +61,15 @@ extension _TextChatMessageViewContent {
                     .lineLimit(nil)
             }
             .markdownTheme(.docC)
-            .textSelection(.enabled)
         }
     }
     
     var _staticTextView: some View {
         MarkdownBody(message.body)
-            .equatable(by: message.body)
+            .font(.body)
+            .foregroundStyle(Color.label)
+            .textSelection(.enabled)
+            .fixedSize(horizontal: false, vertical: true)
     }
 }
 #elseif os(visionOS)
