@@ -16,15 +16,16 @@ public struct _ChatMessageListC<Content: View>: View {
     }
     
     public var body: some View {
-        CocoaList {
+        CocoaScrollViewReader { proxy in
             _VariadicViewAdapter(content) { content in
-                _ForEachSubview(enumerating: content, trait: \._chatItemConfiguration) { (index: Int, subview: _VariadicViewChildren.Subview, item: _ChatItemConfiguration) in
-                    _ChatMessageRowContainer {
-                        withEnvironmentValue(\._chatViewActions) { actions in
+                let lastItem: AnyChatItemIdentifier? = content.children.last?[trait: \_ViewTraitKeys._chatItemConfiguration]?.id
+
+                CocoaList {
+                    _ForEachSubview(enumerating: content, trait: \._chatItemConfiguration) { (index: Int, subview: _VariadicViewChildren.Subview, item: _ChatItemConfiguration) in
+                        _ChatMessageRowContainer {
                             subview
                                 .chatItem(id: item.id, role: item.role)
-                                .environment(\._chatItemViewActions, .init(from: actions, id: item.id))
-                                .cocoaListItem(id: item.id)
+                                .padding(.horizontal, .small)
                                 .modifier(
                                     __LazyMessagesVStackStackItem(
                                         index: index,
@@ -38,11 +39,29 @@ public struct _ChatMessageListC<Content: View>: View {
                         }
                     }
                 }
+                .modifier(_ChatMessageListC_ScrollBehavior(scrollView: proxy, lastItem: lastItem))
+
             }
+            ._SwiftUIX_defaultScrollAnchor(.bottom)
         }
-        ._overridePreferences {
-            $0.cell.viewHostingOptions.detachHostingView = false
-        }
-        ._SwiftUIX_defaultScrollAnchor(.bottom)
+    }
+}
+
+fileprivate struct _ChatMessageListC_ScrollBehavior: ViewModifier {
+    let scrollView: CocoaScrollViewProxy
+    let lastItem: AnyChatItemIdentifier?
+    
+    func body(content: Content) -> some View {
+        content
+            .initialContentAlignment(.bottom)
+            .withChangePublisher(for: lastItem) { lastItem in
+                lastItem
+                    .compactMap({ $0 })
+                    .removeDuplicates()
+                    .debounce(for: .milliseconds(200), scheduler: DispatchQueue.main)
+                    .sink { _ in
+                        scrollView.scrollTo(.bottom)
+                    }
+            }
     }
 }

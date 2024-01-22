@@ -9,6 +9,7 @@ public struct ChatInputBar: View {
     @Environment(\._chatViewPreferences) private var _chatViewPreferences: _ChatViewPreferences?
     @Environment(\._chatInputBarStyle) private var chatInputBarStyle
     @Environment(\.isEnabled) private var isEnabled
+    @Environment(\.userInterfaceIdiom) private var userInterfaceIdiom
     
     private let onSubmit: (String) -> Void
     
@@ -63,20 +64,22 @@ public struct ChatInputBar: View {
     }
     
     private var textView: some View {
-        TextView(
-            "Enter a message here",
-            text: $text,
-            onCommit: {
-                onSubmit(text)
-                
-                DispatchQueue.main.async {
-                    text = ""
+        _ConditionalScrollView(scrollEnabled: _SwiftUI_TargetPlatformType.current == .macOS) {
+            TextView(
+                "Enter a message here",
+                text: $text,
+                onCommit: {
+                    onSubmit(text)
+                    
+                    DispatchQueue.main.async {
+                        text = ""
+                    }
                 }
-            }
-        )
-        .foregroundColor(.primary)
-        .dismissKeyboardOnReturn(true)
-        .transition(.opacity.animation(.default))
+            )
+            .foregroundColor(.primary)
+            .dismissKeyboardOnReturn(true)
+            .transition(.opacity.animation(.default))
+        }
     }
     
     private var sendActivityDisclosure: some View {

@@ -46,7 +46,7 @@ struct _TextChatMessageViewContent: View {
 
 #if os(iOS) || os(macOS) || os(tvOS) || os(watchOS)
 extension _TextChatMessageViewContent {
-    private struct MarkdownBody: Equatable, View {
+    private struct MarkdownBody: View {
         let text: String
         
         init(_ text: String) {
@@ -54,22 +54,16 @@ extension _TextChatMessageViewContent {
         }
         
         var body: some View {
-            VStack(alignment: .leading, spacing: 0) {
-                Markdown(text)
-                    .font(.body)
-                    .foregroundColor(.primary)
-                    .lineLimit(nil)
-            }
-            .markdownTheme(.docC)
+            Markdown(text)
+                .markdownTheme(.docC)
         }
     }
-    
+
     var _staticTextView: some View {
         MarkdownBody(message.body)
             .font(.body)
-            .foregroundStyle(Color.label)
+            .foregroundStyle(.primary)
             .textSelection(.enabled)
-            .fixedSize(horizontal: false, vertical: true)
     }
 }
 #elseif os(visionOS)

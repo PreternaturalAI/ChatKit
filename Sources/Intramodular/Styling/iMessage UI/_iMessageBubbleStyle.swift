@@ -42,7 +42,6 @@ public struct _iMessageBubbleStyle: ViewModifier {
             .accentColor(isSender ? Color.white : Color.accentColor)
             .foregroundStyle(foregroundStyle)
             .backgroundStyle(backgroundStyle)
-            .frame(minWidth: 44, minHeight: 10)
     }
     
     private var backgroundView: some View {

@@ -120,6 +120,8 @@ struct __LazyMessagesVStackScrollBehavior: ViewModifier {
 }
 
 struct __LazyMessagesVStackStackItem: Identifiable, ViewModifier {
+    @Environment(\._chatViewActions) var _chatViewActions
+    
     let index: Int?
     let id: AnyChatItemIdentifier
     let role: AnyHashable
@@ -131,10 +133,10 @@ struct __LazyMessagesVStackStackItem: Identifiable, ViewModifier {
         let role = role.base as! ChatItemRoles.SenderRecipient
         
         content
+            .environment(\._chatItemViewActions, .init(from: _chatViewActions, id: id))
             .contentShape(Rectangle())
-            .onChangeOfFrame { _ in
-                scrollView?.scrollTo(id, anchor: .bottom)
-            }
+            .padding(.top, index == 0 ? 12 : 0)
+            .padding(.bottom, 4)
             .frame(
                 maxWidth: min((containerWidth ?? (800 / 0.7)) * 0.7, 800),
                 alignment: role == .sender ? .trailing : .leading
@@ -143,7 +145,8 @@ struct __LazyMessagesVStackStackItem: Identifiable, ViewModifier {
                 width: .greedy,
                 alignment: role == .sender ? .trailing : .leading
             )
-            .padding(.top, index == 0 ? 12 : 0)
-            .padding(.bottom, 4)
+            .onChangeOfFrame { _ in
+                scrollView?.scrollTo(id, anchor: .bottom)
+            }
     }
 }
