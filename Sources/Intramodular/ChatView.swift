@@ -19,7 +19,7 @@ public struct ChatView<Content: View>: View {
     @State public var _chatViewPreferences = _ChatViewPreferences()
     
     public var body: some View {
-        ViewAssociationLevel { level in
+        _ViewLevel { level in
             XStack {
                 content
             }

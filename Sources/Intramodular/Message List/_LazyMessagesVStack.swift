@@ -65,7 +65,7 @@ public struct _LazyMessagesVStack<Content: View>: View {
                     lastItem: lastID
                 )
             )
-            .onChange(of: subviews.isEmpty) { _ in
+            ._onChange(of: subviews.isEmpty) { _ in
                 self._viewID = UUID()
             }
         }
