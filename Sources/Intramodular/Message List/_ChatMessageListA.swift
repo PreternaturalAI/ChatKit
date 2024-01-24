@@ -10,21 +10,23 @@ public struct _ChatMessageListA<Content: View>: View {
     @Environment(\._chatViewPreferences) private var chatView
     
     private let content: Content
-
+    
     @State private var showIndicators: Bool = false
-
+    
     public init(@ViewBuilder content: () -> Content) {
         self.content = content()
     }
-
+    
     public var body: some View {
         ScrollView(showsIndicators: showIndicators) {
-            _LazyMessagesVStack {
-                _VariadicViewAdapter(content) { content in
-                    _ForEachSubview(content, trait: \._chatItemConfiguration) { subview, item in
+            _VariadicViewAdapter(content) { content in
+                _LazyMessagesVStack {
+                    _ForEachSubview(content, trait: \._chatItemConfiguration) { (subview, item: _ChatItemConfiguration) in
                         subview
                             .padding(.small)
                             .padding(.horizontal, .extraSmall)
+                            .frame(width: .greedy)
+                            ._trait(\._chatItemConfiguration, item)
                     }
                 }
                 

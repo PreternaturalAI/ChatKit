@@ -72,6 +72,7 @@ extension _TextChatMessageViewContent {
     var _staticTextView: some View {
         Text(message.body)
             .font(.body.scaled(by: 1.5))
+            .fixedSize(horizontal: false, vertical: true)
             .contentTransition(.opacity)
             .animation(.default, value: message.body)
     }

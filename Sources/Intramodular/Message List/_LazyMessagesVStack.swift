@@ -40,8 +40,8 @@ public struct _LazyMessagesVStack<Content: View>: View {
             if subviews.isEmpty {
                 contentUnavailableView
             }
-            
-            LazyVStack(spacing: 0) {
+                        
+            VStack(spacing: 0) {
                 _ForEachSubview(
                     enumerating: subviews,
                     trait: \._chatItemConfiguration
