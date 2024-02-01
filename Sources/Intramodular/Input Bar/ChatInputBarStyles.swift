@@ -3,6 +3,7 @@
 //
 
 import SwiftUIX
+import SwiftUIZ
 
 public struct MessagesAppChatInputBarStyle: ChatInputBarStyle {
     @Environment(\.isEnabled) var isEnabled
@@ -83,28 +84,56 @@ extension ChatInputBarStyle where Self == MessagesAppChatInputBarStyle {
 
 public struct FloatingChatInputBarStyle: ChatInputBarStyle {
     @Environment(\.isEnabled) var isEnabled
-    
+    @Environment(\.userInterfaceIdiom) var userInterfaceIdiom
+
     public func makeBody(configuration: ChatInputBarConfiguration) -> some View {
-        ZStack {
-            Group {
-                if let textInput = configuration.textInput {
-                    textInput
-                        .modifier(_LargeSpotlightLikeTextInputStyle())
-                } else {
-                    ZeroSizeView()
+        UnaryViewAdaptor {
+            ZStack {
+                Group {
+                    if let textInput = configuration.textInput {
+                        textInput
+                            .modifier(_LargeSpotlightLikeTextInputStyle())
+                            .modifier(_DefineTextInputShape())
+                    } else {
+                        ZeroSizeView()
+                    }
                 }
-            }
-            .frame(width: .greedy)
-            .visible(isEnabled)
-            
-            if let status = configuration.status {
-                status.padding()
+                .frame(width: .greedy)
+                .visible(isEnabled)
+                
+                if let status = configuration.status {
+                    status.padding()
+                }
             }
         }
         .padding(.small)
+        .padding(userInterfaceIdiom == .vision ? .top : .bottom)
         .padding(.bottom)
     }
 }
+
+#if os(visionOS)
+extension FloatingChatInputBarStyle {
+    fileprivate struct _DefineTextInputShape: ViewModifier {
+        func body(content: Content) -> some View {
+            content
+                .compositingGroup()
+                .clipShape(RoundedRectangle(cornerRadius: 16))
+                .contentShape(.hoverEffect, RoundedRectangle(cornerRadius: 16))
+                ._geometryGroup(.if(.available))
+                .hoverEffect()
+        }
+    }
+}
+#else
+extension FloatingChatInputBarStyle {
+    fileprivate struct _DefineTextInputShape: ViewModifier {
+        func body(content: Content) -> some View {
+            content
+        }
+    }
+}
+#endif
 
 extension ChatInputBarStyle where Self == FloatingChatInputBarStyle {
     public static var floating: Self {
@@ -113,7 +142,7 @@ extension ChatInputBarStyle where Self == FloatingChatInputBarStyle {
 }
 
 #if os(iOS) || os(macOS) || os(tvOS)
-struct _LargeSpotlightLikeTextInputStyle: ViewModifier {
+fileprivate struct _LargeSpotlightLikeTextInputStyle: ViewModifier {
     @FocusState var isTextFieldFocused: Bool
     
     func body(content: Content) -> some View {
@@ -145,7 +174,7 @@ struct _LargeSpotlightLikeTextInputStyle: ViewModifier {
     }
 }
 #elseif os(visionOS)
-struct _LargeSpotlightLikeTextInputStyle: ViewModifier {
+fileprivate struct _LargeSpotlightLikeTextInputStyle: ViewModifier {
     @FocusState var isTextFieldFocused: Bool
     
     func body(content: Content) -> some View {

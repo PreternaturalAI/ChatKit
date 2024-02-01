@@ -40,7 +40,7 @@ public struct _LazyMessagesVStack<Content: View>: View {
             if subviews.isEmpty {
                 contentUnavailableView
             }
-                        
+            
             VStack(spacing: 0) {
                 _ForEachSubview(
                     enumerating: subviews,
@@ -53,8 +53,7 @@ public struct _LazyMessagesVStack<Content: View>: View {
                                 id: configuration.id,
                                 role: configuration.role.erasedAsAnyHashable,
                                 isLast: index == subviews.children.count,
-                                scrollView: scrollView,
-                                containerWidth: chatView?.containerSize?.width
+                                scrollView: scrollView
                             )
                         )
                 }
@@ -127,24 +126,13 @@ struct __LazyMessagesVStackStackItem: Identifiable, ViewModifier {
     let role: AnyHashable
     let isLast: Bool?
     let scrollView: ScrollViewProxy?
-    let containerWidth: CGFloat?
     
     func body(content: Content) -> some View {
-        let role = role.base as! ChatItemRoles.SenderRecipient
-        
         content
             .environment(\._chatItemViewActions, .init(from: _chatViewActions, id: id))
             .contentShape(Rectangle())
             .padding(.top, index == 0 ? 12 : 0)
             .padding(.bottom, 4)
-            .frame(
-                maxWidth: min((containerWidth ?? (800 / 0.7)) * 0.7, 800),
-                alignment: role == .sender ? .trailing : .leading
-            )
-            .frame(
-                width: .greedy,
-                alignment: role == .sender ? .trailing : .leading
-            )
             .onChangeOfFrame { _ in
                 scrollView?.scrollTo(id, anchor: .bottom)
             }

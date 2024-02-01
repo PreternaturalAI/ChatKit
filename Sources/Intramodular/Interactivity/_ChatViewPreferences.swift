@@ -28,13 +28,13 @@ public struct _ChatViewPreferences: Equatable, MergeOperatable {
     var itemActivities: [AnyChatItemIdentifier: _ChatItemActivity] = [:]
     var activityPhaseOfLastItem: ChatItemActivityPhase?
     var interrupt: Action?
-    var containerSize: CGSize?
-
+    
+    let defaultPlaceholderItemID = AnyChatItemIdentifier(base: UUID())
+    
     public mutating func mergeInPlace(with other: Self) {
         self.itemActivities.merge(other.itemActivities, uniquingKeysWith: { lhs, rhs in rhs })
         self.activityPhaseOfLastItem ??= other.activityPhaseOfLastItem
         self.interrupt ??= other.interrupt
-        self.containerSize ??= other.containerSize
     }
 }
 

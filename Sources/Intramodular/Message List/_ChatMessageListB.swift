@@ -35,28 +35,26 @@ public struct _ChatMessageListB<Content: View>: View {
         content: _TypedVariadicView<Content>,
         scrollView: ScrollViewProxy
     ) -> some View {
-        _AxisSizeReader(.horizontal) { size in
-            List {
-                _ForEachSubview(
-                    enumerating: content,
-                    trait: \._chatItemConfiguration
-                ) { (index: Int, subview: _VariadicViewChildren.Subview, configuration: _ChatItemConfiguration) in
-                    subview
-                        .modifier(
-                            __LazyMessagesVStackStackItem(
-                                index: index,
-                                id: configuration.id,
-                                role: configuration.role.erasedAsAnyHashable,
-                                isLast: index == content.children.count,
-                                scrollView: scrollView,
-                                containerWidth: size?.width
-                            )
+        List {
+            _ForEachSubview(
+                enumerating: content,
+                trait: \._chatItemConfiguration
+            ) { (index: Int, subview: _VariadicViewChildren.Subview, item: _ChatItemConfiguration) in
+                subview
+                    .modifier(
+                        __LazyMessagesVStackStackItem(
+                            index: index,
+                            id: item.id,
+                            role: item.role.erasedAsAnyHashable,
+                            isLast: index == content.children.count,
+                            scrollView: scrollView
                         )
-                        ._noListItemModification()
-                }
+                    )
+                    .modifier(_ExpandAndAlignChatItem(item: item))
+                    ._noListItemModification()
             }
-            .listStyle(.plain)
-            ._noListItemModification()
         }
+        .listStyle(.plain)
+        ._noListItemModification()
     }
 }

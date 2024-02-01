@@ -25,34 +25,30 @@ public struct _ChatMessageListA<Content: View>: View {
                         subview
                             .padding(.small)
                             .padding(.horizontal, .extraSmall)
-                            .frame(width: .greedy)
+                            .modifier(_ExpandAndAlignChatItem(item: item))
                             ._trait(\._chatItemConfiguration, item)
                     }
-                }
-                
-                if chatView?.activityPhaseOfLastItem == .sending {
-                    sendTaskDisclosure
+                    
+                    if chatView?.activityPhaseOfLastItem == .sending {
+                        ChatItemCell(item: AnyPlaceholderChatItem())
+                            .modifier(
+                                _ExpandAndAlignChatItem(
+                                    item: .init(
+                                        id: AnyPlaceholderChatItem.id,
+                                        role: ChatItemRoles.SenderRecipient.recipient
+                                    )
+                                )
+                            )
+                    }
                 }
             }
             .padding(.vertical)
         }
         ._SwiftUIX_defaultScrollAnchor(.bottom)
-        .background {
-            _ChatViewBackground()
-        }
         .onAppear {
             withoutAnimation(after: .seconds(1)) {
                 showIndicators = true
             }
         }
-    }
-    
-    private var sendTaskDisclosure: some View {
-        ProgressView()
-            .controlSize(.small)
-            .padding(.leading, .extraSmall)
-            .modifier(_iMessageBubbleStyle(isSender: false, isBorderless: false))
-            .frame(width: .greedy, alignment: .leading)
-            .padding(.horizontal)
     }
 }

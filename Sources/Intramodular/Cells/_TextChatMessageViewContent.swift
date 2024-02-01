@@ -16,10 +16,12 @@ struct _TextChatMessageViewContent: View {
     @State private var editableText: String?
     
     var body: some View {
+        let messageBody: String = message.body!
+
         Group {
             if isEditing, let onEdit = supportedActions.onEdit {
                 EditableText(
-                    text: $editableText.withDefaultValue(message.body),
+                    text: $editableText.withDefaultValue(messageBody),
                     isEditing: .constant(true)
                 ) {
                     isEditing = false
@@ -28,7 +30,7 @@ struct _TextChatMessageViewContent: View {
                 }
                 .lineLimit(nil)
             } else {
-                if message.body.isEmpty {
+                if messageBody.isEmpty {
                     Text("This message has no content.")
                         .font(.body)
                         .foregroundColor(.secondary)
@@ -59,22 +61,29 @@ extension _TextChatMessageViewContent {
         }
     }
 
+    @ViewBuilder
     var _staticTextView: some View {
-        MarkdownBody(message.body)
-            .font(.body)
-            .foregroundStyle(.primary)
-            .textSelection(.enabled)
+        if let messageBody = message.body {
+            MarkdownBody(messageBody)
+                .font(.body)
+                .foregroundStyle(.primary)
+                .textSelection(.enabled)
+        } else {
+            _UnimplementedView()
+        }
     }
 }
 #elseif os(visionOS)
 extension _TextChatMessageViewContent {
     @ViewBuilder
     var _staticTextView: some View {
-        Text(message.body)
-            .font(.body.scaled(by: 1.5))
-            .fixedSize(horizontal: false, vertical: true)
-            .contentTransition(.opacity)
-            .animation(.default, value: message.body)
+        if let body = message.body {
+            Text(body)
+                .font(.body.scaled(by: 1.2))
+                .fixedSize(horizontal: false, vertical: true)
+                .contentTransition(.opacity)
+                .animation(.default, value: message.body)
+        }
     }
 }
 #endif

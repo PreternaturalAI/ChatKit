@@ -4,17 +4,18 @@
 
 import SwiftUI
 
-public struct MessageSendActivityDisclosure: View {
+public struct _AnyChatItemPlaceholderContent: View {
+    let phase: ChatItemActivityPhase
+    
     public var body: some View {
         ProgressView()
             .controlSize(.small)
             .padding(.leading, .extraSmall)
-            .modifier(_iMessageBubbleStyle(isSender: false, isBorderless: false))
-            .frame(width: .greedy, alignment: .leading)
-            .padding(.horizontal)
     }
     
-    public init() {
-        
+    public init(
+        phase: ChatItemActivityPhase = .sending
+    ) {
+        self.phase = phase
     }
 }

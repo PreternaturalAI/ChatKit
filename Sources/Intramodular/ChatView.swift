@@ -20,8 +20,10 @@ public struct ChatView<Content: View>: View {
     
     public var body: some View {
         _ViewLevel { level in
-            XStack {
-                content
+            UnaryViewAdaptor {
+                XStack(alignment: .top) {
+                    content
+                }
             }
             .modify(forUnwrapped: inputView) { inputView in
                 AnyViewModifier {
@@ -35,7 +37,6 @@ public struct ChatView<Content: View>: View {
             .onPreferenceChange(_ChatViewPreferences._PreferenceKey.self) {
                 self._chatViewPreferences = $0
             }
-            ._measureAndRecordSize(into: $_chatViewPreferences.containerSize)
         }
     }
 }

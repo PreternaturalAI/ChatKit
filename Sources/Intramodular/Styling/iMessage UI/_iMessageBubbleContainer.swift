@@ -4,7 +4,7 @@
 
 import SwiftUIX
 
-@_spi(Internal)
+/*@_spi(Internal)
 public struct _iMessageBubbleContainer<Content: View>: View {
     private let content: Content
     private let isSender: Bool
@@ -23,3 +23,4 @@ public struct _iMessageBubbleContainer<Content: View>: View {
             .modifier(_iMessageBubbleStyle(isSender: isSender, isBorderless: false))
     }
 }
+*/

@@ -32,15 +32,14 @@ public struct _ChatMessageListC<Content: View>: View {
                                         id: item.id,
                                         role: item.role.erasedAsAnyHashable,
                                         isLast: nil,
-                                        scrollView: nil,
-                                        containerWidth: chatView?.containerSize?.width
+                                        scrollView: nil
                                     )
                                 )
+                                .modifier(_ExpandAndAlignChatItem(item: item))
                         }
                     }
                 }
                 .modifier(_ChatMessageListC_ScrollBehavior(scrollView: proxy, lastItem: lastItem))
-
             }
             ._SwiftUIX_defaultScrollAnchor(.bottom)
         }

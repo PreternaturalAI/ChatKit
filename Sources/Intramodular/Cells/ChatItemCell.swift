@@ -80,3 +80,23 @@ extension ChatItemCell {
         }
     }
 }
+
+struct _ExpandAndAlignChatItem: ViewModifier {
+    let item: _ChatItemConfiguration
+    
+    func body(content: Content) -> some View {
+        let role = item.role as! ChatItemRoles.SenderRecipient
+        
+        _IntrinsicGeometryValueReader(\.width) { width in
+            content
+                .frame(
+                    maxWidth: min((width ?? (800 / 0.7)) * 0.7, 800),
+                    alignment: role == .sender ? .trailing : .leading
+                )
+                .frame(
+                    width: .greedy,
+                    alignment: role == .sender ? .trailing : .leading
+                )
+        }
+    }
+}

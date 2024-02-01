@@ -54,7 +54,7 @@ public struct _iMessageBubbleStyle: ViewModifier {
                 ._addMessageTail(location: isSender ? .trailing : .leading)
                 .foregroundStyle(Color.black)
         }
-        .drawingGroup(opaque: true)
+        .drawingGroup(opaque: false)
         .modify(for: .visionOS) { content in
             if !isSender {
                 content.opacity(0.75)

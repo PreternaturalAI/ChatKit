@@ -5,11 +5,24 @@
 import Swallow
 
 public struct AnyChatMessage: ChatItem, Hashable, Identifiable, AnyChatMessageConvertible {
-    public let id: AnyChatItemIdentifier
+    public var id: AnyChatItemIdentifier
     @_HashableExistential
     public var role: any ChatItemRole
-    public let body: String
-    
+    public var activityPhase: ChatItemActivityPhase?
+    public var body: String?
+
+    public init(
+        id: AnyChatItemIdentifier,
+        role: any ChatItemRole,
+        activityPhase: ChatItemActivityPhase? = nil,
+        body: String?
+    ) {
+        self.id = id
+        self.role = role
+        self.activityPhase = activityPhase
+        self.body = body
+    }
+
     public init(
         id: AnyChatItemIdentifier,
         role: any ChatItemRole,
