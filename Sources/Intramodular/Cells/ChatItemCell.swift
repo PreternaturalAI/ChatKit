@@ -41,6 +41,7 @@ public struct ChatItemCell: View {
         .transformEnvironment(\._chatItemViewActions) {
             $0 = $0.mergingInPlace(with: actions)
         }
+        .transition(.opacity.animation(.default))
         .chatItem(id: item.id, role: item.role)
     }
     
