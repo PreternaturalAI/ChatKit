@@ -37,10 +37,6 @@ public struct _LazyMessagesVStack<Content: View>: View {
         _VariadicViewAdapter<Content, _>(content) { subviews in
             let lastID = subviews.children.last?[trait: \._chatItemConfiguration]?.id
             
-            if subviews.isEmpty {
-                contentUnavailableView
-            }
-            
             VStack(spacing: 0) {
                 _ForEachSubview(
                     enumerating: subviews,
@@ -67,20 +63,6 @@ public struct _LazyMessagesVStack<Content: View>: View {
             ._onChange(of: subviews.isEmpty) { _ in
                 self._viewID = UUID()
             }
-        }
-    }
-    
-    @ViewBuilder
-    private var contentUnavailableView: some View {
-        if #available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *) {
-            ContentUnavailableView {
-                Image(systemName: .messageFill)
-                    .font(.largeTitle)
-            } description: {
-                Text("No Messages")
-                    .font(.title)
-            }
-            .padding(.extraLarge)
         }
     }
 }
