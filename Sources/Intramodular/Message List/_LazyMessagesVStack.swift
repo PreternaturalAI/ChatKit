@@ -111,7 +111,7 @@ struct __LazyMessagesVStackStackItem: Identifiable, ViewModifier {
     
     func body(content: Content) -> some View {
         content
-            .environment(\._chatItemViewActions, .init(from: _chatViewActions, id: id))
+            .environment(\._chatItemConfiguration, _ChatItemConfiguration(id: id, actions: _chatViewActions))
             .contentShape(Rectangle())
             .padding(.top, index == 0 ? 12 : 0)
             .padding(.bottom, 4)

@@ -7,7 +7,7 @@ import MarkdownUI
 import SwiftUIZ
 
 struct _TextChatMessageViewContent: View {
-    @Environment(\._chatItemViewActions) var supportedActions
+    @Environment(\._chatItemConfiguration) var _chatItemConfiguration
     
     let message: AnyChatMessage
     
@@ -19,7 +19,7 @@ struct _TextChatMessageViewContent: View {
         let messageBody: String = message.body!
 
         Group {
-            if isEditing, let onEdit = supportedActions.onEdit {
+            if isEditing, let onEdit = _chatItemConfiguration.onEdit {
                 EditableText(
                     text: $editableText.withDefaultValue(messageBody),
                     isEditing: .constant(true)

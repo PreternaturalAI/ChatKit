@@ -21,7 +21,7 @@ public struct _ChatMessageListC<Content: View>: View {
                 let lastItem: AnyChatItemIdentifier? = content.children.last?[trait: \_ViewTraitKeys._chatItemConfiguration]?.id
 
                 CocoaList {
-                    _ForEachSubview(enumerating: content, trait: \._chatItemConfiguration) { (index: Int, subview: _VariadicViewChildren.Subview, item: _ChatItemConfiguration) in
+                    _ForEachSubview(enumerating: content, trait: \._chatItemConfiguration) { (index: Int, subview: _VariadicViewChildren.Subview, item: _ChatItemIdentity) in
                         _ChatMessageRowContainer {
                             subview
                                 .chatItem(id: item.id, role: item.role)

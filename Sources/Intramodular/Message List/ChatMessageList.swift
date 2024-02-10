@@ -72,7 +72,10 @@ extension ChatMessageList {
                             id: item.id,
                             role: item.role
                         )
-                        .environment(\._chatItemViewActions, .init(from: actions, id: item.id))
+                        .environment(
+                            \._chatItemConfiguration,
+                             _ChatItemConfiguration(id: item.id, actions: actions)
+                        )
                 }
             }
         }
@@ -92,7 +95,13 @@ extension ChatMessageList {
                             id: chatItem.id,
                             role: chatItem.role
                         )
-                        .environment(\._chatItemViewActions, .init(from: actions, id: chatItem.id))
+                        .environment(
+                            \._chatItemConfiguration,
+                             _ChatItemConfiguration(
+                                id: chatItem.id,
+                                actions: actions
+                             )
+                        )
                 }
             }
         }
@@ -111,7 +120,7 @@ extension ChatMessageList {
                 withEnvironmentValue(\._chatViewActions) { actions in
                     _ForEachSubview(content, trait: \._chatItemConfiguration) { subview, chatItem in
                         subview
-                            .environment(\._chatItemViewActions, .init(from: actions, id: chatItem.id))
+                            .environment(\._chatItemConfiguration, _ChatItemConfiguration(id: chatItem.id, actions: actions))
                             .chatItem(
                                 id: chatItem.id,
                                 role: chatItem.role

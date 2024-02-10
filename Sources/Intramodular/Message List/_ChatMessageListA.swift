@@ -21,7 +21,7 @@ public struct _ChatMessageListA<Content: View>: View {
         ScrollView(showsIndicators: showIndicators) {
             _VariadicViewAdapter(content) { content in
                 _LazyMessagesVStack {
-                    _ForEachSubview(content, trait: \._chatItemConfiguration) { (subview, item: _ChatItemConfiguration) in
+                    _ForEachSubview(content, trait: \._chatItemConfiguration) { (subview, item: _ChatItemIdentity) in
                         subview
                             .padding(.small)
                             .padding(.horizontal, .extraSmall)

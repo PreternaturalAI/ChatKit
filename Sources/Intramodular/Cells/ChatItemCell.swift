@@ -9,15 +9,15 @@ import SwiftUIZ
 public struct ChatItemCell: View {
     @Environment(_type: (any ChatItemCellStyle).self) var chatItemCellStyle
     
-    @Environment(\._chatItemViewActions) var _chatItemViewActions
+    @Environment(\._chatItemConfiguration) var _chatItemConfiguration
     
     private var item: AnyChatMessage
-    private var _actions: _ChatItemCellActions = nil
+    private var _actions: _ChatItemConfiguration = nil
     
     @State private var isEditing: Bool = false
     
-    fileprivate var actions: _ChatItemCellActions {
-        _chatItemViewActions.mergingInPlace(with: _actions)
+    fileprivate var configuration: _ChatItemConfiguration {
+        _chatItemConfiguration.mergingInPlace(with: _actions)
     }
     
     public init(
@@ -34,18 +34,26 @@ public struct ChatItemCell: View {
     
     public var body: some View {
         _WithDynamicPropertyExistential(chatItemCellStyle ?? DefaultChatItemCellStyle()) { (style: (any ChatItemCellStyle)) in
-            style
-                .body(configuration: ChatItemCellConfiguration(item: item, isEditing: $isEditing))
-                .eraseToAnyView()
+            style.body(
+                configuration: ChatItemCellConfiguration(
+                    item: item,
+                    decorations: _chatItemConfiguration.decorations,
+                    isEditing: $isEditing
+                )
+            )
+            .eraseToAnyView()
         }
-        .transformEnvironment(\._chatItemViewActions) {
-            $0 = $0.mergingInPlace(with: actions)
-        }
+        .environment(\._chatItemConfiguration, configuration)
+        .environment(\._chatItemState, _ChatItemState(isEditing: $isEditing))
         .transition(.opacity.animation(.default))
         .chatItem(id: item.id, role: item.role)
     }
-    
-    public func roleInvert(_ active: Bool = false) -> Self {
+}
+
+extension ChatItemCell {
+    public func roleInvert(
+        _ active: Bool = false
+    ) -> Self {
         withMutableScope(self) {
             if active {
                 $0.item.role = try! item.role.invertRole()
@@ -83,7 +91,7 @@ extension ChatItemCell {
 }
 
 struct _ExpandAndAlignChatItem: ViewModifier {
-    let item: _ChatItemConfiguration
+    let item: _ChatItemIdentity
     
     func body(content: Content) -> some View {
         let role = item.role as! ChatItemRoles.SenderRecipient

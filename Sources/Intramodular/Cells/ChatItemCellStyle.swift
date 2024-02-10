@@ -6,6 +6,7 @@ import SwiftUIX
 
 public struct ChatItemCellConfiguration: _DynamicViewStyleConfiguration {
     public let item: AnyChatMessage
+    public let decorations: [ChatItemDecorationPlacement: AnyView]
     
     @Binding var isEditing: Bool
 }

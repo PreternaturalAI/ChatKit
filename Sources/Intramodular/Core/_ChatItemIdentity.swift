@@ -6,7 +6,7 @@ import Swallow
 import SwiftUIZ
 
 @_ViewTrait
-public struct _ChatItemConfiguration: Identifiable {
+public struct _ChatItemIdentity: Identifiable {
     public var id: AnyChatItemIdentifier
     @_HashableExistential
     public var role: any ChatItemRole
@@ -14,7 +14,7 @@ public struct _ChatItemConfiguration: Identifiable {
 
 // MARK: - Auxiliary
 
-@_ViewTraitKey(for: _ChatItemConfiguration.self, named: "_chatItemConfiguration")
+@_ViewTraitKey(for: _ChatItemIdentity.self, named: "_chatItemConfiguration")
 extension _ViewTraitKeys { }
 
 extension View {

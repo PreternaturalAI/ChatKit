@@ -39,7 +39,7 @@ public struct _ChatMessageListB<Content: View>: View {
             _ForEachSubview(
                 enumerating: content,
                 trait: \._chatItemConfiguration
-            ) { (index: Int, subview: _VariadicViewChildren.Subview, item: _ChatItemConfiguration) in
+            ) { (index: Int, subview: _VariadicViewChildren.Subview, item: _ChatItemIdentity) in
                 subview
                     .modifier(
                         __LazyMessagesVStackStackItem(
