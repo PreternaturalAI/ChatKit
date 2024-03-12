@@ -87,7 +87,7 @@ public struct FloatingChatInputBarStyle: ChatInputBarStyle {
     @Environment(\.userInterfaceIdiom) var userInterfaceIdiom
 
     public func makeBody(configuration: ChatInputBarConfiguration) -> some View {
-        UnaryViewAdaptor {
+        _SwiftUI_UnaryViewAdaptor {
             ZStack {
                 Group {
                     if let textInput = configuration.textInput {

@@ -16,7 +16,7 @@ public struct _ChatMessageListB<Content: View>: View {
     
     public var body: some View {
         ScrollViewReader { scrollView in
-            _VariadicViewAdapter(content) { (content: _TypedVariadicView<Content>) in
+            _VariadicViewAdapter(content) { (content: _SwiftUI_VariadicView<Content>) in
                 let lastItem: AnyChatItemIdentifier? = content.children.last?[trait: \._chatItemConfiguration]?.id
                 
                 makeList(content: content, scrollView: scrollView)
@@ -32,7 +32,7 @@ public struct _ChatMessageListB<Content: View>: View {
     }
     
     private func makeList(
-        content: _TypedVariadicView<Content>,
+        content: _SwiftUI_VariadicView<Content>,
         scrollView: ScrollViewProxy
     ) -> some View {
         List {

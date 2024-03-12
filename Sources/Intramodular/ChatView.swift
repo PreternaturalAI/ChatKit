@@ -20,7 +20,7 @@ public struct ChatView<Content: View>: View {
     
     public var body: some View {
         _ViewLevel { level in
-            UnaryViewAdaptor {
+            _SwiftUI_UnaryViewAdaptor {
                 XStack(alignment: .top) {
                     content
                 }
