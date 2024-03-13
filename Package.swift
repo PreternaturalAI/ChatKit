@@ -6,9 +6,7 @@ let package = Package(
     name: "ChatKit",
     platforms: [
         .iOS(.v16),
-        .macOS(.v13),
-        .tvOS(.v16),
-        .watchOS(.v9)
+        .macOS(.v14)
     ],
     products: [
         .library(
