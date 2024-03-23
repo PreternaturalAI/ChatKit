@@ -23,7 +23,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        xcode: ['15.2']
+        xcode: ['15.3']
         macos: ['macos-13']
         scheme: ['ChatKit']
         command: ['build']
