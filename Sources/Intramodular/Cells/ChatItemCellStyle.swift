@@ -4,7 +4,7 @@
 
 import SwiftUIX
 
-public struct ChatItemCellConfiguration: _DynamicViewStyleConfiguration {
+public struct ChatItemCellConfiguration {
     public let item: AnyChatMessage
     public let decorations: [ChatItemDecorationPlacement: AnyView]
     
