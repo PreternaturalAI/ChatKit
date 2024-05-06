@@ -23,8 +23,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        xcode: ['15.2']
-        macos: ['macos-13']
+        xcode: ['latest']
+        macos: ['macos-14']
         scheme: ['ChatKit']
         command: ['build']
         platform: ['macOS'] # ADD 'iOS', 'tvOS', 'watchOS'
