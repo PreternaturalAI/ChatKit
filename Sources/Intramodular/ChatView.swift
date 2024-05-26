@@ -19,24 +19,22 @@ public struct ChatView<Content: View>: View {
     @State public var _chatViewPreferences = _ChatViewPreferences()
     
     public var body: some View {
-        _ViewLevel { level in
-            _SwiftUI_UnaryViewAdaptor {
-                XStack(alignment: .top) {
-                    content
+        _SwiftUI_UnaryViewAdaptor {
+            XStack(alignment: .top) {
+                content
+            }
+        }
+        .modify(forUnwrapped: inputView) { inputView in
+            AnyViewModifier {
+                $0._bottomBar {
+                    inputView
+                        .padding(.horizontal)
                 }
             }
-            .modify(forUnwrapped: inputView) { inputView in
-                AnyViewModifier {
-                    $0._bottomBar {
-                        inputView
-                            .padding(.horizontal)
-                    }
-                }
-            }
-            .environment(\._chatViewPreferences, (_inheritedChatViewPreferences ?? .init()).mergingInPlace(with: _chatViewPreferences))
-            .onPreferenceChange(_ChatViewPreferences._PreferenceKey.self) {
-                self._chatViewPreferences = $0
-            }
+        }
+        .environment(\._chatViewPreferences, (_inheritedChatViewPreferences ?? .init()).mergingInPlace(with: _chatViewPreferences))
+        .onPreferenceChange(_ChatViewPreferences._PreferenceKey.self) {
+            self._chatViewPreferences = $0
         }
     }
 }
