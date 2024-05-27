@@ -3,7 +3,7 @@
 //
 
 @_spi(Internal) import SwiftUIX
-
+import SwiftUI
 public enum ChatItemActivityPhase: Hashable {
     case idle
     case sending
