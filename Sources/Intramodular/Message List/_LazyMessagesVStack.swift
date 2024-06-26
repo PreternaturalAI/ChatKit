@@ -3,7 +3,9 @@
 //
 
 @_spi(Internal) import SwiftUIX
+import SwiftUIZ
 
+@View(.dynamic)
 public struct _LazyMessagesVStack<Content: View>: View {
     @Environment(\._chatViewPreferences) var chatView
     
@@ -109,14 +111,14 @@ struct __LazyMessagesVStackStackItem: Identifiable, ViewModifier {
     let isLast: Bool?
     let scrollView: ScrollViewProxy?
     
+    @ViewStorage var isActive: Bool = false
+    
     func body(content: Content) -> some View {
         content
             .environment(\._chatItemConfiguration, _ChatItemConfiguration(id: id, actions: _chatViewActions))
             .contentShape(Rectangle())
             .padding(.top, index == 0 ? 12 : 0)
             .padding(.bottom, 4)
-            .onChangeOfFrame { _ in
-                scrollView?.scrollTo(id, anchor: .bottom)
-            }
+            .geometryGroup()
     }
 }

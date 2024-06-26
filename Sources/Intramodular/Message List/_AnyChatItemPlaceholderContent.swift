@@ -2,7 +2,7 @@
 // Copyright (c) Vatsal Manot
 //
 
-import SwiftUI
+import SwiftUIZ
 
 public struct _AnyChatItemPlaceholderContent: View {
     @Environment(\.userInterfaceIdiom) var userInterfaceIdiom

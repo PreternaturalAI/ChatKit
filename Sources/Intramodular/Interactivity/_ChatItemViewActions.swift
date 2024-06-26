@@ -6,6 +6,10 @@ import Swallow
 import SwiftUIX
 import SwiftUIZ
 
+extension ChatView {
+    
+}
+
 public struct _ChatViewActions: Initiable, MergeOperatable {
     var onEdit: ((AnyChatItemIdentifier, AnyChatItemContent) -> Void)?
     var onDelete: ((AnyChatItemIdentifier) -> Void)?
