@@ -119,6 +119,5 @@ struct __LazyMessagesVStackStackItem: Identifiable, ViewModifier {
             .contentShape(Rectangle())
             .padding(.top, index == 0 ? 12 : 0)
             .padding(.bottom, 4)
-            .geometryGroup()
     }
 }
