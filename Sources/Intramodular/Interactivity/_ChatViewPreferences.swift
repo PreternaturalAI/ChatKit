@@ -26,15 +26,15 @@ public struct _ChatViewInteractions: MergeOperatable {
 
 public struct _ChatViewPreferences: Equatable, MergeOperatable {
     var itemActivities: [AnyChatItemIdentifier: _ChatItemActivity] = [:]
-    var activityPhaseOfLastItem: ChatItemActivityPhase?
+    var itemActivityPhaseByItem: [AnyChatItemIdentifier: ChatItemActivityPhase] = [:]
     var interrupt: Action?
-    
-    let defaultPlaceholderItemID = AnyChatItemIdentifier(base: UUID())
-    
+    var activityPhaseOfLastItem: ChatItemActivityPhase?
+
     public mutating func mergeInPlace(with other: Self) {
         self.itemActivities.merge(other.itemActivities, uniquingKeysWith: { lhs, rhs in rhs })
-        self.activityPhaseOfLastItem ??= other.activityPhaseOfLastItem
+        self.itemActivityPhaseByItem.merge(other.itemActivityPhaseByItem, uniquingKeysWith: { lhs, rhs in rhs })
         self.interrupt ??= other.interrupt
+        self.activityPhaseOfLastItem ??= other.activityPhaseOfLastItem
     }
 }
 
@@ -50,5 +50,5 @@ extension _ChatViewPreferences {
 
 extension EnvironmentValues {
     @EnvironmentValue
-    public var _chatViewPreferences: _ChatViewPreferences?
+    public var _chatViewPreferences: _ChatViewPreferences = .init()
 }

@@ -6,7 +6,7 @@ import SwiftUIX
 import SwiftUIZ
 
 public struct ChatInputBar: View {
-    @Environment(\._chatViewPreferences) private var _chatViewPreferences: _ChatViewPreferences?
+    @Environment(\._chatViewPreferences) private var _chatViewPreferences: _ChatViewPreferences
     @Environment(\._chatInputBarStyle) private var chatInputBarStyle
     @Environment(\.isEnabled) private var isEnabled
     @Environment(\.userInterfaceIdiom) private var userInterfaceIdiom
@@ -29,37 +29,29 @@ public struct ChatInputBar: View {
     }
     
     public var body: some View {
-        if let _chatViewPreferences {
-            _WithDynamicPropertyExistential(chatInputBarStyle) {
-                $0.makeBody(
-                    configuration: .init(
-                        textInput: _chatViewPreferences.activityPhaseOfLastItem != .sending ? textView.eraseToAnyView() : nil,
-                        status: _chatViewPreferences.activityPhaseOfLastItem == nil ? nil : statusView.eraseToAnyView()
-                    )
+        _WithDynamicPropertyExistential(chatInputBarStyle) {
+            $0.makeBody(
+                configuration: .init(
+                    textInput: _chatViewPreferences.activityPhaseOfLastItem != .sending ? textView.eraseToAnyView() : nil,
+                    status: _chatViewPreferences.activityPhaseOfLastItem == nil ? nil : statusView.eraseToAnyView()
                 )
-                .animation(.default, value: _chatViewPreferences.activityPhaseOfLastItem)
-            }
-        } else {
-            _UnimplementedView()
+            )
+            .animation(.default, value: _chatViewPreferences.activityPhaseOfLastItem)
         }
     }
     
     @ViewBuilder
     public var statusView: some View {
-        Group {
-            if let _chatViewPreferences {
-                switch _chatViewPreferences.activityPhaseOfLastItem {
-                    case .sending:
-                        if let stop = _chatViewPreferences.interrupt {
-                            StopButton(action: stop)
-                                .environment(\.isEnabled, true)
-                        } else {
-                            sendActivityDisclosure
-                        }
-                    default:
-                        EmptyView()
+        switch _chatViewPreferences.activityPhaseOfLastItem {
+            case .sending:
+                if let stop = _chatViewPreferences.interrupt {
+                    StopButton(action: stop)
+                        .environment(\.isEnabled, true)
+                } else {
+                    sendActivityDisclosure
                 }
-            }
+            default:
+                EmptyView()
         }
     }
     

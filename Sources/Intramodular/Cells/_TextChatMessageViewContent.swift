@@ -26,7 +26,7 @@ struct _TextChatMessageViewContent: View {
                 ) {
                     isEditing = false
                     
-                    onEdit(.init(content: $0))
+                    onEdit(AnyChatItemContent(content: $0))
                 }
                 .lineLimit(nil)
             } else {

@@ -20,15 +20,13 @@ public struct _LazyMessagesVStack<Content: View>: View {
     
     public var body: some View {
         ScrollViewReader { scrollView in
-            if chatView != nil {
-                makeBody(scrollView: scrollView)
-                    .modify(for: .visionOS) { content in
-                        content
-                            .padding(.horizontal)
-                            .padding()
-                    }
-                    .frame(minWidth: 128, maxWidth: .infinity)
-            }
+            makeBody(scrollView: scrollView)
+                .modify(for: .visionOS) { content in
+                    content
+                        .padding(.horizontal)
+                        .padding()
+                }
+                .frame(minWidth: 128, maxWidth: .infinity)
         }
         .id(_viewID)
     }
@@ -37,12 +35,12 @@ public struct _LazyMessagesVStack<Content: View>: View {
         scrollView: ScrollViewProxy
     ) -> some View {
         _VariadicViewAdapter<Content, _>(content) { subviews in
-            let lastID = subviews.children.last?[trait: \._chatItemConfiguration]?.id
+            let lastID = subviews.children.last?[trait: \._chatItemTraitValue]?.id
             
             VStack(spacing: 0) {
                 _ForEachSubview(
                     enumerating: subviews,
-                    trait: \._chatItemConfiguration
+                    trait: \._chatItemTraitValue
                 ) { (index, subview, configuration) in
                     subview
                         .modifier(
@@ -115,7 +113,7 @@ struct __LazyMessagesVStackStackItem: Identifiable, ViewModifier {
     
     func body(content: Content) -> some View {
         content
-            .environment(\._chatItemConfiguration, _ChatItemConfiguration(id: id, actions: _chatViewActions))
+            .environment(\._chatItemConfiguration, merging: _ChatItemConfiguration(id: id, actions: _chatViewActions))
             .contentShape(Rectangle())
             .padding(.top, index == 0 ? 12 : 0)
             .padding(.bottom, 4)

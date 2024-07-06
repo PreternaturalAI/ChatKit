@@ -14,12 +14,10 @@ public struct AnyChatMessage: ChatItem, Hashable, Identifiable, AnyChatMessageCo
     public init(
         id: AnyChatItemIdentifier,
         role: any ChatItemRole,
-        activityPhase: ChatItemActivityPhase? = nil,
         body: String?
     ) {
         self.id = id
         self.role = role
-        self.activityPhase = activityPhase
         self.body = body
     }
 

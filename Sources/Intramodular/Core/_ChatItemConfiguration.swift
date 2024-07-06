@@ -10,15 +10,18 @@ struct _ChatItemConfiguration: Initiable, ExpressibleByNilLiteral {
     var onDelete: (() -> Void)?
     var onResend: (() -> Void)?
     var decorations: [ChatItemDecorationPlacement: AnyView] = [:]
+    var activityPhase: ChatItemActivityPhase?
     
     init(
         onEdit: ((AnyChatItemContent) -> Void)? = nil,
         onDelete: (() -> Void)? = nil,
-        onResend: (() -> Void)? = nil
+        onResend: (() -> Void)? = nil,
+        activityPhase: ChatItemActivityPhase?
     ) {
         self.onEdit = onEdit
         self.onDelete = onDelete
         self.onResend = onResend
+        self.activityPhase = activityPhase
     }
     
     init() {
@@ -28,8 +31,12 @@ struct _ChatItemConfiguration: Initiable, ExpressibleByNilLiteral {
     init(nilLiteral: ()) {
         
     }
-    
+}
+
+extension _ChatItemConfiguration {
     init(id: AnyChatItemIdentifier, actions: _ChatViewActions) {
+        self.init()
+        
         if let onEdit = actions.onEdit {
             self.onEdit = {
                 onEdit(id, $0)
@@ -54,12 +61,11 @@ struct _ChatItemConfiguration: Initiable, ExpressibleByNilLiteral {
 
 extension _ChatItemConfiguration: MergeOperatable {
     public mutating func mergeInPlace(with other: Self) {
-        self.onEdit = other.onEdit
-        self.onDelete = other.onDelete
-        self.onResend = other.onResend
-        self.decorations = decorations.merging(other.decorations) { lhs, rhs in
-            rhs
-        }
+        self.onEdit = other.onEdit ?? self.onEdit
+        self.onDelete = other.onDelete ?? self.onDelete
+        self.onResend = other.onResend ?? self.onResend
+        self.decorations = decorations.merging(other.decorations) { lhs, rhs in rhs }
+        self.activityPhase = other.activityPhase ?? self.activityPhase
     }
 }
 

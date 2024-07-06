@@ -6,24 +6,23 @@ import MarkdownUI
 import Swallow
 import SwiftUIZ
 
-public struct ChatItemCell: View {
+public struct ChatItemCell: Identifiable, View {
     @Environment(_type: (any ChatItemCellStyle).self) var chatItemCellStyle
     
     @Environment(\._chatItemConfiguration) var _chatItemConfiguration
+    @Environment(\._chatViewPreferences) var _chatViewPreferences
+
+    public var id: AnyChatItemIdentifier {
+        item.id
+    }
     
     private var item: AnyChatMessage
-    private var _actions: _ChatItemConfiguration = nil
+    private var explicitItemConfiguration: _ChatItemConfiguration = nil
     
     @State private var isEditing: Bool = false
     
-    fileprivate var configuration: _ChatItemConfiguration {
-        _chatItemConfiguration.mergingInPlace(with: _actions)
-    }
-    
-    public init(
-        item: AnyChatMessage
-    ) {
-        self.item = item
+    fileprivate var itemConfiguration: _ChatItemConfiguration {
+        _chatItemConfiguration.mergingInPlace(with: explicitItemConfiguration)
     }
     
     public init(
@@ -33,17 +32,22 @@ public struct ChatItemCell: View {
     }
     
     public var body: some View {
-        _WithDynamicPropertyExistential(chatItemCellStyle ?? DefaultChatItemCellStyle()) { (style: (any ChatItemCellStyle)) in
+        _WithDynamicPropertyExistential(chatItemCellStyle ?? DefaultChatItemCellStyle()) { (style: (any ChatItemCellStyle)) -> (any View) in
+            let item2: AnyChatMessage = withMutableScope(item) {
+                if let phase = (itemConfiguration.activityPhase ?? $0.activityPhase) ?? _chatViewPreferences.itemActivityPhaseByItem[id], phase != .idle {
+                    $0.activityPhase = phase
+                }
+            }
+
             style.body(
                 configuration: ChatItemCellConfiguration(
-                    item: item,
+                    item: item2,
                     decorations: _chatItemConfiguration.decorations,
                     isEditing: $isEditing
                 )
             )
-            .eraseToAnyView()
         }
-        .environment(\._chatItemConfiguration, configuration)
+        .environment(\._chatItemConfiguration, itemConfiguration)
         .environment(\._chatItemState, _ChatItemState(isEditing: $isEditing))
         .transition(.opacity.animation(.default))
         .chatItem(id: item.id, role: item.role)
@@ -68,7 +72,7 @@ extension ChatItemCell {
     ) -> Self {
         then {
             if let fn {
-                $0._actions.onEdit = { fn($0.content) }
+                $0.explicitItemConfiguration.onEdit = { fn($0.content) }
             }
         }
     }
@@ -77,7 +81,7 @@ extension ChatItemCell {
         perform fn: (() -> Void)?
     ) -> Self {
         then {
-            $0._actions.onDelete = fn
+            $0.explicitItemConfiguration.onDelete = fn
         }
     }
     
@@ -85,13 +89,13 @@ extension ChatItemCell {
         perform fn: (() -> Void)?
     ) -> Self {
         then {
-            $0._actions.onResend = fn
+            $0.explicitItemConfiguration.onResend = fn
         }
     }
 }
 
 struct _ExpandAndAlignChatItem: ViewModifier {
-    let item: _ChatItemIdentity
+    let item: _ChatItemTraitValue
     
     func body(content: Content) -> some View {
         let role = item.role as! ChatItemRoles.SenderRecipient

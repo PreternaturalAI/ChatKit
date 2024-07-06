@@ -6,7 +6,7 @@ import Swallow
 import SwiftUIZ
 
 @_ViewTrait
-public struct _ChatItemIdentity: Identifiable {
+public struct _ChatItemTraitValue: Identifiable {
     public var id: AnyChatItemIdentifier
     @_HashableExistential
     public var role: any ChatItemRole
@@ -14,7 +14,7 @@ public struct _ChatItemIdentity: Identifiable {
 
 // MARK: - Auxiliary
 
-@_ViewTraitKey(for: _ChatItemIdentity.self, named: "_chatItemConfiguration")
+@_ViewTraitKey(for: _ChatItemTraitValue.self, named: "_chatItemTraitValue")
 extension _ViewTraitKeys { }
 
 extension View {
@@ -22,7 +22,13 @@ extension View {
         id: T,
         role: any ChatItemRole
     ) -> some View {
-        _trait(\._chatItemConfiguration, .init(id: .init(base: id), role: role))
+        withEnvironmentValue(\._chatViewActions) { actions in
+            let id = AnyChatItemIdentifier(base: id)
+            
+            self
+                .environment(\._chatItemConfiguration, merging: _ChatItemConfiguration(id: id, actions: actions))
+                ._trait(\._chatItemTraitValue, _ChatItemTraitValue(id: id, role: role))
+        }
     }
     
     public func chatMessage<T: Hashable>(

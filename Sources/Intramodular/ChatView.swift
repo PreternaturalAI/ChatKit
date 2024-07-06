@@ -11,8 +11,6 @@ public enum _ChatViewElement {
 
 /// A view that contains a chat interface.
 public struct ChatView<Content: View>: View {
-    @Environment(\._chatViewPreferences) var _inheritedChatViewPreferences
-    
     let content: Content
     let inputView: AnyView?
     
@@ -32,25 +30,21 @@ public struct ChatView<Content: View>: View {
                 }
             }
         }
-        .environment(\._chatViewPreferences, (_inheritedChatViewPreferences ?? .init()).mergingInPlace(with: _chatViewPreferences))
+        .environment(\._chatViewPreferences, merging: _chatViewPreferences)
         .onPreferenceChange(_ChatViewPreferences._PreferenceKey.self) {
             self._chatViewPreferences = $0
         }
     }
 }
 
-extension View {
-    public func activityPhaseOfLastItem(
-        _ state: ChatItemActivityPhase
-    ) -> some View {
-        environment(\._chatViewPreferences, merging: .init(activityPhaseOfLastItem: state))
-    }
-    
+extension View {    
     public func onChatInterrupt(
         perform action: @escaping () -> Void
     ) -> some View {
         withActionTrampoline(for: Action(action)) { action in
-            environment(\._chatViewPreferences, merging: .init(interrupt: action))
+            transformEnvironment(\._chatViewPreferences) {
+                $0.interrupt = action
+            }
         }
     }
     

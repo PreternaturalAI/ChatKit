@@ -13,7 +13,8 @@ struct DefaultChatItemCellStyle: ChatItemCellStyle {
             .modifier(
                 _iMessageBubbleStyle(
                     isSender: try! configuration.item.isSender,
-                    isBorderless: false
+                    isBorderless: false,
+                    error: configuration.item.activityPhase?.error
                 )
             )
             ._formStackByAdding(

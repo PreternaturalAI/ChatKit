@@ -18,30 +18,36 @@ public struct _ChatMessageListB<Content: View>: View {
         case lastItem
     }
     
+    @ViewStorage var lastItem: AnyChatItemIdentifier?
+    
     public var body: some View {
-        _VariadicViewAdapter(content) { (content: _SwiftUI_VariadicView<Content>) in
-            let lastItem: AnyChatItemIdentifier? = content.children.last?[trait: \._chatItemConfiguration]?.id
-            
-            ScrollViewReader { scrollView in
-                List {
+        ScrollViewReader { scrollView in
+            List {
+                _VariadicViewAdapter(content) { (content: _SwiftUI_VariadicView<Content>) in
+                    let _: Void = {
+                        lastItem = content.children.last?[trait: \._chatItemTraitValue]?.id
+                    }()
+
                     _ForEachSubview(
                         enumerating: content,
-                        trait: \._chatItemConfiguration,
-                        id: \.id
-                    ) { (index: Int, subview: _VariadicViewChildren.Subview, item: _ChatItemIdentity) in
-                        _SwiftUI_UnaryViewAdaptor {
+                        trait: \._chatItemTraitValue
+                    ) { (index: Int, subview: _VariadicViewChildren.Subview, item: _ChatItemTraitValue) in
+                        _ChatMessageRowContainer(
+                            id: item.id,
+                            offset: _ElementOffsetInParentCollection(offset: index, in: 0..<content.children.count)
+                        ) {
                             subview
-                                .modifier(
-                                    __LazyMessagesVStackStackItem(
-                                        index: index,
-                                        id: item.id,
-                                        role: item.role.erasedAsAnyHashable,
-                                        isLast: index == content.children.count,
-                                        scrollView: scrollView
-                                    )
-                                )
-                                .modifier(_ExpandAndAlignChatItem(item: item))
                         }
+                        .modifier(
+                            __LazyMessagesVStackStackItem(
+                                index: index,
+                                id: item.id,
+                                role: item.role.erasedAsAnyHashable,
+                                isLast: index == content.children.count,
+                                scrollView: scrollView
+                            )
+                        )
+                        .modifier(_ExpandAndAlignChatItem(item: item))
                         .modifier(_StipAllListItemStyling(insetsIncluded: false))
                         .id(item.id)
                     }

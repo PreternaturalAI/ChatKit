@@ -17,12 +17,18 @@ public struct _ChatMessageListC<Content: View>: View {
     
     public var body: some View {
         CocoaScrollViewReader { proxy in
-            _VariadicViewAdapter(content) { content in
-                let lastItem: AnyChatItemIdentifier? = content.children.last?[trait: \_ViewTraitKeys._chatItemConfiguration]?.id
+            _VariadicViewAdapter(content) { (content: _SwiftUI_VariadicView<Content>) in
+                let lastItem: AnyChatItemIdentifier? = content.children.last?[trait: \._chatItemTraitValue]?.id
 
                 CocoaList {
-                    _ForEachSubview(enumerating: content, trait: \._chatItemConfiguration) { (index: Int, subview: _VariadicViewChildren.Subview, item: _ChatItemIdentity) in
-                        _ChatMessageRowContainer {
+                    _ForEachSubview(
+                        enumerating: content,
+                        trait: \._chatItemTraitValue
+                    ) { (index: Int, subview: _VariadicViewChildren.Subview, item: _ChatItemTraitValue) in
+                        _ChatMessageRowContainer(
+                            id: item.id,
+                            offset: _ElementOffsetInParentCollection(offset: index, in: 0..<content.children.count)
+                        ) {
                             subview
                                 .chatItem(id: item.id, role: item.role)
                                 .padding(.horizontal, .small)

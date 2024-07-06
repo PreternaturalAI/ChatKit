@@ -7,7 +7,7 @@ import SwiftUIX
 public struct ChatItemCellConfiguration {
     public let item: AnyChatMessage
     public let decorations: [ChatItemDecorationPlacement: AnyView]
-    
+
     @Binding var isEditing: Bool
 }
 

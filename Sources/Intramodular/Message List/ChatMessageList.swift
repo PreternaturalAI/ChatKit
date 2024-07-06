@@ -39,19 +39,24 @@ public struct ChatMessageList<Data: RandomAccessCollection>: View where Data.Ele
     }
     
     public var body: some View {
-        switch implementationStrategy {
-            case .a:
-                _ChatMessageListA {
-                    _content
-                }
-            case .b:
-                _ChatMessageListB {
-                    _content
-                }
-            case .c:
-                _ChatMessageListC {
-                    _content
-                }
+        Group {
+            switch implementationStrategy {
+                case .a:
+                    _ChatMessageListA {
+                        _content
+                    }
+                case .b:
+                    _ChatMessageListB {
+                        _content
+                    }
+                case .c:
+                    _ChatMessageListC {
+                        _content
+                    }
+            }
+        }
+        .transformEnvironment(\._chatViewActions) {
+            $0.mergeInPlace(with: _chatViewActions)
         }
     }
 }
@@ -66,43 +71,22 @@ extension ChatMessageList {
             ForEach(data) { item in
                 let item = item.__conversion()
                 
-                withEnvironmentValue(\._chatViewActions) { actions in
-                    ChatItemCell(item: item)
-                        .chatItem(
-                            id: item.id,
-                            role: item.role
-                        )
-                        .environment(
-                            \._chatItemConfiguration,
-                             _ChatItemConfiguration(id: item.id, actions: actions)
-                        )
-                }
+                ChatItemCell(item: item)
+                    .chatItem(id: item.id, role: item.role)
             }
         }
     }
     
     public init<Content: View>(
         _ data: Data,
-        content: @escaping (Data.Element) -> Content
+        content: @escaping (AnyChatMessage) -> Content
     ) where Data.Element: ChatMessageConvertible {
         self.init {
-            ForEach(data) { item in
-                let chatItem = item.__conversion()
+            ForEach(data) { (item: Data.Element) in
+                let item: AnyChatMessage = item.__conversion()
                 
-                withEnvironmentValue(\._chatViewActions) { actions in
-                    content(item)
-                        .chatItem(
-                            id: chatItem.id,
-                            role: chatItem.role
-                        )
-                        .environment(
-                            \._chatItemConfiguration,
-                             _ChatItemConfiguration(
-                                id: chatItem.id,
-                                actions: actions
-                             )
-                        )
-                }
+                content(item)
+                    .chatItem(id: item.id, role: item.role)
             }
         }
     }
@@ -112,21 +96,8 @@ extension ChatMessageList {
         content: @escaping (Data.Element) -> Content
     ) {
         self.init {
-            _VariadicViewAdapter {
-                ForEach(data) { item in
-                    content(item)
-                }
-            } content: { content in
-                withEnvironmentValue(\._chatViewActions) { actions in
-                    _ForEachSubview(content, trait: \._chatItemConfiguration) { subview, chatItem in
-                        subview
-                            .environment(\._chatItemConfiguration, _ChatItemConfiguration(id: chatItem.id, actions: actions))
-                            .chatItem(
-                                id: chatItem.id,
-                                role: chatItem.role
-                            )
-                    }
-                }
+            ForEach(data) { item in
+                content(item)
             }
         }
     }

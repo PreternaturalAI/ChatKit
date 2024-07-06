@@ -21,15 +21,15 @@ public struct _ChatMessageListA<Content: View>: View {
         ScrollView(showsIndicators: showIndicators) {
             _VariadicViewAdapter(content) { content in
                 _LazyMessagesVStack {
-                    _ForEachSubview(content, trait: \._chatItemConfiguration) { (subview, item: _ChatItemIdentity) in
+                    _ForEachSubview(content, trait: \._chatItemTraitValue) { (subview, item: _ChatItemTraitValue) in
                         subview
                             .padding(.small)
                             .padding(.horizontal, .extraSmall)
                             .modifier(_ExpandAndAlignChatItem(item: item))
-                            ._trait(\._chatItemConfiguration, item)
+                            ._trait(\._chatItemTraitValue, item)
                     }
                     
-                    if chatView?.activityPhaseOfLastItem == .sending {
+                    if chatView.activityPhaseOfLastItem == .sending {
                         ChatItemCell(item: AnyPlaceholderChatItem())
                             .modifier(
                                 _ExpandAndAlignChatItem(
