@@ -18,15 +18,19 @@ public struct _ChatMessageListB<Content: View>: View {
         case lastItem
     }
     
-    @ViewStorage var lastItem: AnyChatItemIdentifier?
+    @State var lastItem: AnyChatItemIdentifier?
     
     public var body: some View {
         ScrollViewReader { scrollView in
             List {
                 _VariadicViewAdapter(content) { (content: _SwiftUI_VariadicView<Content>) in
-                    let _: Void = {
-                        lastItem = content.children.last?[trait: \._chatItemTraitValue]?.id
-                    }()
+                    PerformAction {
+                        let lastItem = content.children.last?[trait: \._chatItemTraitValue]?.id
+                        
+                        if self.lastItem != lastItem {
+                            self.lastItem = lastItem
+                        }
+                    }
 
                     _ForEachSubview(
                         enumerating: content,

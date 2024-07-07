@@ -32,7 +32,7 @@ public struct ChatItemCell: Identifiable, View {
     }
     
     public var body: some View {
-        _WithDynamicPropertyExistential(chatItemCellStyle ?? DefaultChatItemCellStyle()) { (style: (any ChatItemCellStyle)) -> (any View) in
+        _WithDynamicPropertyExistential(chatItemCellStyle ?? iMessageChatItemCellStyle()) { (style: (any ChatItemCellStyle)) -> (any View) in
             let item2: AnyChatMessage = withMutableScope(item) {
                 if let phase = (itemConfiguration.activityPhase ?? $0.activityPhase) ?? _chatViewPreferences.itemActivityPhaseByItem[id], phase != .idle {
                     $0.activityPhase = phase

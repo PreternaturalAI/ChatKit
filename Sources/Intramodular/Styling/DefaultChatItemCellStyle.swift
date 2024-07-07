@@ -5,7 +5,7 @@
 import SwiftUIX
 import SwiftUIZ
 
-struct DefaultChatItemCellStyle: ChatItemCellStyle {
+struct iMessageChatItemCellStyle: ChatItemCellStyle {
     func body(
         configuration: ChatItemCellConfiguration
     ) -> some View {
@@ -95,13 +95,4 @@ public struct ChatItemActions: View {
             _UnimplementedView()
         }
     }
-}
-
-extension EnvironmentValues {
-    @EnvironmentValue
-    var _chatItemState: _ChatItemState?
-}
-
-struct _ChatItemState {
-    @Binding var isEditing: Bool
 }
