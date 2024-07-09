@@ -14,6 +14,8 @@ public struct AnyChatItemIdentifier: Hashable {
         } else {
             self.base = base
         }
+        
+        assert(!_isValueNil(base.base))
     }
     
     public func `as`<T>(_ type: T.Type) -> T {

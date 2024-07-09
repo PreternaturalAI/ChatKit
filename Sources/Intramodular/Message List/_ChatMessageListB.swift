@@ -18,7 +18,7 @@ public struct _ChatMessageListB<Content: View>: View {
         case lastItem
     }
     
-    @State var lastItem: AnyChatItemIdentifier?
+    @State private var lastItem: AnyChatItemIdentifier?
     
     public var body: some View {
         ScrollViewReader { scrollView in
@@ -28,10 +28,12 @@ public struct _ChatMessageListB<Content: View>: View {
                         let lastItem = content.children.last?[trait: \._chatItemTraitValue]?.id
                         
                         if self.lastItem != lastItem {
-                            self.lastItem = lastItem
+                            withoutAnimation {
+                                self.lastItem = lastItem
+                            }
                         }
                     }
-
+                    
                     _ForEachSubview(
                         enumerating: content,
                         trait: \._chatItemTraitValue
@@ -57,7 +59,7 @@ public struct _ChatMessageListB<Content: View>: View {
                     }
                 }
                 ._stripAllListOrListItemStyling()
-                .modifier(_ChatMessageListB_ScrollBehavior(scrollView: scrollView, lastItem: lastItem))
+                .modifier(_ChatMessageListB_ScrollBehavior(scrollView: scrollView, lastItem: $lastItem))
             }
         }
     }
@@ -65,33 +67,44 @@ public struct _ChatMessageListB<Content: View>: View {
 
 fileprivate struct _ChatMessageListB_ScrollBehavior: ViewModifier {
     let scrollView: ScrollViewProxy
-    let lastItem: AnyChatItemIdentifier?
+    
+    @Binding var lastItem: AnyChatItemIdentifier?
+    
+    @ViewStorage var hasScrolledOnce: Bool = false
     
     func body(content: Content) -> some View {
         content
             .onAppearOnce {
-                guard let lastItem else {
-                    return
-                }
-                
-                withoutAnimation(after: .milliseconds(200)) {
-                    scrollView.scrollTo(lastItem, anchor: .bottom)
-                    
-                    withoutAnimation(after: .milliseconds(200)) {
-                        scrollView.scrollTo(lastItem, anchor: .bottom)
-                    }
-                }
+                scrollTo(lastItem)
             }
             .withChangePublisher(for: lastItem) { lastItem in
                 lastItem
                     .compactMap({ $0 })
                     .removeDuplicates()
                     .debounce(for: .milliseconds(200), scheduler: DispatchQueue.main)
-                    .sink { id in
-                        withAnimation {
-                            scrollView.scrollTo(id, anchor: .bottom)
-                        }
+                    .sink { (id: AnyChatItemIdentifier) in
+                        scrollTo(id)
                     }
             }
+    }
+    
+    private func scrollTo(_ item: AnyChatItemIdentifier?) {
+        guard let item: AnyChatItemIdentifier = item ?? self.lastItem else {
+            return
+        }
+        
+        scrollView.scrollTo(lastItem, anchor: .bottom)
+        
+        if !hasScrolledOnce {
+            withoutAnimation(after: .milliseconds(200)) {
+                scrollView.scrollTo(item, anchor: .bottom)
+                                
+                hasScrolledOnce = true
+            }
+            
+            withoutAnimation(after: .milliseconds(250)) {
+                scrollView.scrollTo(item, anchor: .bottom)
+            }
+        }
     }
 }

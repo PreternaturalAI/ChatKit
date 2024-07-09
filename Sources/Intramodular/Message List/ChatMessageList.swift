@@ -106,6 +106,14 @@ extension ChatMessageList {
 // MARK: - Modifiers
 
 extension ChatMessageList {
+    public func onEdit(
+        perform fn: @escaping (Data.Element.ID, String) -> Void
+    ) -> Self {
+        then {
+            $0._chatViewActions.onEdit = { fn($0.as(Data.Element.ID.self), $1.content) }
+        }
+    }
+
     public func onDelete(
         perform fn: @escaping (Data.Element.ID) -> Void
     ) -> Self {
