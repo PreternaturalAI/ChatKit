@@ -43,31 +43,36 @@ public struct _iMessageBubbleStyle: ViewModifier {
                         trailing: 6
                     )
                 )
-                .background(backgroundView)
-                .modify(if: isBorderless) {
-                    $0.shadow(.regularMessageButtonStyle)
+                .background {
+                    backgroundView
+                        .drawingGroup(opaque: false)
                 }
+                .shadow(isBorderless ? .regularMessageButtonStyle : nil)
                 .accentColor(isSender ? Color.white : Color.accentColor)
                 .foregroundStyle(foregroundStyle)
                 .backgroundStyle(backgroundStyle)
             
             if error != nil {
-                HoverReader { proxy in
-                    Button {
-                        
-                    } label: {
-                        Image(systemName: proxy.isHovering ? .arrowClockwise : .exclamationmarkCircle)
-                            .font(.body.weight(.medium))
-                            .imageScale(.large)
-                            .foregroundColor(proxy.isHovering ? .orange : .red)
-                            .transition(.opacity.combined(with: .scale).animation(.default))
-                            .contentShape(Rectangle())
-                    }
-                    .buttonStyle(.plain)
-                }
+                errorIndicator
             }
         }
         .animation(.default, value: error)
+    }
+    
+    private var errorIndicator: some View {
+        HoverReader { proxy in
+            Button {
+                
+            } label: {
+                Image(systemName: proxy.isHovering ? .arrowClockwise : .exclamationmarkCircle)
+                    .font(.body.weight(.medium))
+                    .imageScale(.large)
+                    .foregroundColor(proxy.isHovering ? .orange : .red)
+                    .transition(.opacity.combined(with: .scale).animation(.default))
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+        }
     }
     
     private var backgroundView: some View {
@@ -80,7 +85,6 @@ public struct _iMessageBubbleStyle: ViewModifier {
                 ._addMessageTail(location: isSender ? .trailing : .leading)
                 .foregroundStyle(Color.black)
         }
-        .drawingGroup(opaque: false)
         .modify(for: .visionOS) { content in
             if !isSender {
                 content.opacity(0.75)

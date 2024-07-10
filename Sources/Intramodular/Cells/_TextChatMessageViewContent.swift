@@ -57,6 +57,7 @@ extension _TextChatMessageViewContent {
         
         var body: some View {
             Markdown(text)
+                .equatable()
                 .markdownTheme(.docC)
         }
     }
