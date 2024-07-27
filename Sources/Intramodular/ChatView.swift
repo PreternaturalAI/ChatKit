@@ -14,30 +14,27 @@ public struct ChatView<Content: View>: View {
     let content: Content
     let inputView: AnyView?
     
-    @State public var _chatViewPreferences = _ChatViewPreferences()
-    
     public var body: some View {
-        _SwiftUI_UnaryViewAdaptor {
-            XStack(alignment: .top) {
-                content
-            }
-        }
-        .modify(forUnwrapped: inputView) { inputView in
-            AnyViewModifier {
-                $0._bottomBar {
-                    inputView
-                        .padding(.horizontal)
+        _PreferenceReader(_ChatViewPreferences._PreferenceKey.self) { _chatViewPreferences in
+            _SwiftUI_UnaryViewAdaptor {
+                XStack(alignment: .top) {
+                    content
                 }
             }
-        }
-        .environment(\._chatViewPreferences, merging: _chatViewPreferences)
-        .onPreferenceChange(_ChatViewPreferences._PreferenceKey.self) {
-            self._chatViewPreferences = $0
+            .environment(\._chatViewPreferences, merging: _chatViewPreferences)
+            .modify(forUnwrapped: inputView) { inputView in
+                AnyViewModifier {
+                    $0._bottomBar {
+                        inputView
+                            .padding(.horizontal)
+                    }
+                }
+            }
         }
     }
 }
 
-extension View {    
+extension View {
     public func onChatInterrupt(
         perform action: @escaping () -> Void
     ) -> some View {

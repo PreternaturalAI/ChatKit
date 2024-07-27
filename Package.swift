@@ -27,6 +27,7 @@ let package = Package(
             name: "ChatKit",
             dependencies: [
                 "CorePersistence",
+                .product(name: "MarkdownUI", package: "SwiftUIZ"),
                 "Swallow",
                 "SwiftUIX",
                 "SwiftUIZ",

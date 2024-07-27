@@ -2,8 +2,8 @@
 // Copyright (c) Vatsal Manot
 //
 
-
 import Foundation
+import SwiftUIZ
 
 struct _ChatItemConfiguration: Initiable, ExpressibleByNilLiteral {
     var onEdit: ((AnyChatItemContent) -> Void)?

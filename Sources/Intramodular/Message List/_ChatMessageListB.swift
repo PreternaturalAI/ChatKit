@@ -62,6 +62,7 @@ public struct _ChatMessageListB<Content: View>: View {
                 .modifier(_ChatMessageListB_ScrollBehavior(scrollView: scrollView, lastItem: $lastItem))
             }
         }
+        ._SwiftUIX_defaultScrollAnchor(.bottom)
     }
 }
 
