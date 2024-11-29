@@ -7,7 +7,7 @@ import SwiftUIZ
 
 /// A SwiftUIX `CocoaList` based approach.
 public struct _ChatMessageListC<Content: View>: View {
-    @Environment(\._chatViewPreferences) private var chatView
+    @Environment(\._chatViewPreferences) private var chatView: _ChatViewPreferences
     
     private let content: Content
     

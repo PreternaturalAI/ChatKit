@@ -6,8 +6,8 @@ import SwiftUIX
 import SwiftUIZ
 
 struct _ChatMessageRowContainer<Content: View>: View {
-    @Environment(\._chatViewPreferences) var _chatViewPreferences
-    @Environment(\._chatItemConfiguration) var _chatItemConfiguration
+    @Environment(\._chatViewPreferences) var _chatViewPreferences: _ChatViewPreferences
+    @Environment(\._chatItemConfiguration) var _chatItemConfiguration: _ChatItemConfiguration
 
     let id: AnyChatItemIdentifier
     let content: Content

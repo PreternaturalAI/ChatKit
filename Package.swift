@@ -12,6 +12,7 @@ let package = Package(
         .library(
             name: "ChatKit",
             targets: [
+                "ChatKitCore",
                 "ChatKit"
             ]
         )
@@ -24,7 +25,7 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "ChatKit",
+            name: "ChatKitCore",
             dependencies: [
                 "CorePersistence",
                 .product(name: "MarkdownUI", package: "SwiftUIZ"),
@@ -32,7 +33,15 @@ let package = Package(
                 "SwiftUIX",
                 "SwiftUIZ",
             ],
-            path: "Sources"
+            path: "Sources/ChatKitCore"
+        ),
+        .target(
+            name: "ChatKit",
+            dependencies: [
+                "ChatKitCore",
+                "SwiftUIX",
+            ],
+            path: "Sources/ChatKit"
         )
     ]
 )

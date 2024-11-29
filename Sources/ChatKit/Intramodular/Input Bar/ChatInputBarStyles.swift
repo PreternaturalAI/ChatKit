@@ -25,7 +25,8 @@ public struct MessagesAppChatInputBarStyle: ChatInputBarStyle {
     private func makeTextInputContainer(content: AnyView?) -> some View {
         Group {
             if let content = content {
-                content.modifier(_TextViewConfiguration())
+                content
+                    .modifier(_TextViewConfigurationModifier())
             } else {
                 ZeroSizeView()
             }
@@ -33,8 +34,10 @@ public struct MessagesAppChatInputBarStyle: ChatInputBarStyle {
         .frame(width: .greedy)
         .visible(isEnabled)
     }
-    
-    private struct _TextViewConfiguration: ViewModifier {
+}
+
+extension MessagesAppChatInputBarStyle {
+    private struct _TextViewConfigurationModifier: ViewModifier {
         @Environment(\.isEnabled) var isEnabled
         
         @FocusState var isTextFieldFocused: Bool

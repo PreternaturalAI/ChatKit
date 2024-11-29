@@ -44,7 +44,7 @@ public struct ChatInputBar: View {
     public var statusView: some View {
         switch _chatViewPreferences.activityPhaseOfLastItem {
             case .sending:
-                if let stop = _chatViewPreferences.interrupt {
+                if let stop = _chatViewPreferences.onInterrupt {
                     StopButton(action: stop)
                         .environment(\.isEnabled, true)
                 } else {

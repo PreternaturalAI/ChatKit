@@ -1,0 +1,230 @@
+{
+  "pins" : [
+    {
+      "identity" : "cataphyl",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/PreternaturalAI/Cataphyl.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "d4025f2068a7ba136f5eba0b984a68d7cc33abf5"
+      }
+    },
+    {
+      "identity" : "chatkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/PreternaturalAI/ChatKit.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "6183039c5ccedd1759d289da1d0f8165e3ed185f"
+      }
+    },
+    {
+      "identity" : "coregml",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/PreternaturalAI/CoreGML.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "c107598931ba59b8e9d5c1aa6f86925d441dbedc"
+      }
+    },
+    {
+      "identity" : "corepersistence",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/vmanot/CorePersistence.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "720ae68d7ceadff32d8cc345ec1d0e95c36a3a31"
+      }
+    },
+    {
+      "identity" : "elevenlabs",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/PreternaturalAI/ElevenLabs.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "d442d965c23bdb3395e87f80e79f2eb0a872b287"
+      }
+    },
+    {
+      "identity" : "engine",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/nathantannar4/Engine",
+      "state" : {
+        "branch" : "main",
+        "revision" : "cedaae978319207d86e5435957702c5637c6e182"
+      }
+    },
+    {
+      "identity" : "expansions",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/vmanot/Expansions.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "1466fcd0c1f2510050c2e2132e5f19fedbd3533a"
+      }
+    },
+    {
+      "identity" : "largelanguagemodels",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/PreternaturalAI/LargeLanguageModels.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "bf0448e9262a4520a5bb991ed5428de38b1fd75e"
+      }
+    },
+    {
+      "identity" : "lite",
+      "kind" : "remoteSourceControl",
+      "location" : "http://github.com/PreternaturalAI/Lite",
+      "state" : {
+        "branch" : "main",
+        "revision" : "631b4b62842f646f6c85dc8d725bba6a44eaf9ff"
+      }
+    },
+    {
+      "identity" : "markdownui",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/PreternaturalAI/MarkdownUI.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "26c21ffb5d4f35934f63b6a6b340381912bb67d6"
+      }
+    },
+    {
+      "identity" : "media",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/vmanot/Media.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "dd22662a8436c185c91ff17b0a9355381bbbc120"
+      }
+    },
+    {
+      "identity" : "merge",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/vmanot/Merge.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "2b7a6f98ee9adcdceadc6f0a4191d9e62a3206d9"
+      }
+    },
+    {
+      "identity" : "networkkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/vmanot/NetworkKit.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "fe26f2aad9b2226f0a054b1d8dd4287aae8fa39c"
+      }
+    },
+    {
+      "identity" : "nuke",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kean/Nuke.git",
+      "state" : {
+        "revision" : "1694798e876113d44f6ec6ead965d7286695981d",
+        "version" : "12.2.0"
+      }
+    },
+    {
+      "identity" : "openai",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/vmanot/OpenAI.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "9446238210014dc2f7f72ceaf1956e9c7a86027b"
+      }
+    },
+    {
+      "identity" : "pow",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/vmanot/Pow.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "cc014eba4b65f689cadc281ad925de5607f2adc9"
+      }
+    },
+    {
+      "identity" : "swallow",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/vmanot/Swallow.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "1feaa8c2d7aecbd0705f2e3fc3624a8e152e5325"
+      }
+    },
+    {
+      "identity" : "swift-async-algorithms",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-async-algorithms",
+      "state" : {
+        "revision" : "da4e36f86544cdf733a40d59b3a2267e3a7bbf36",
+        "version" : "1.0.0"
+      }
+    },
+    {
+      "identity" : "swift-collections",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-collections",
+      "state" : {
+        "branch" : "release/1.1",
+        "revision" : "a8d1434540b03e3509225cdbfd7b5c6293d0c8bb"
+      }
+    },
+    {
+      "identity" : "swift-syntax",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-syntax.git",
+      "state" : {
+        "revision" : "6ad4ea24b01559dde0773e3d091f1b9e36175036",
+        "version" : "509.0.2"
+      }
+    },
+    {
+      "identity" : "swiftapi",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/vmanot/SwiftAPI.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "bf6d9cf205820b49466a333bf611696bceb86dd8"
+      }
+    },
+    {
+      "identity" : "swiftui-introspect",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/siteline/SwiftUI-Introspect",
+      "state" : {
+        "revision" : "121c146fe591b1320238d054ae35c81ffa45f45a",
+        "version" : "0.12.0"
+      }
+    },
+    {
+      "identity" : "swiftuix",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SwiftUIX/SwiftUIX.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "2bf8eda3acad39b0419e4053d321059030cfa04b"
+      }
+    },
+    {
+      "identity" : "swiftuiz",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SwiftUIX/SwiftUIZ.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "b6bdc8e303da7df6335b27a1ed4cc6a36dacfd87"
+      }
+    },
+    {
+      "identity" : "usearch",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/unum-cloud/usearch",
+      "state" : {
+        "branch" : "main",
+        "revision" : "c2463ca3a043c26e99f50cfbf31232a8a646d060"
+      }
+    }
+  ],
+  "version" : 2
+}

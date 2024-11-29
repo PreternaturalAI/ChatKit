@@ -27,13 +27,13 @@ public struct _ChatViewInteractions: MergeOperatable {
 public struct _ChatViewPreferences: Equatable, MergeOperatable {
     var itemActivities: [AnyChatItemIdentifier: _ChatItemActivity] = [:]
     var itemActivityPhaseByItem: [AnyChatItemIdentifier: ChatItemActivityPhase] = [:]
-    var interrupt: Action?
+    var onInterrupt: Action?
     var activityPhaseOfLastItem: ChatItemActivityPhase?
 
     public mutating func mergeInPlace(with other: Self) {
         self.itemActivities.merge(other.itemActivities, uniquingKeysWith: { lhs, rhs in rhs })
         self.itemActivityPhaseByItem.merge(other.itemActivityPhaseByItem, uniquingKeysWith: { lhs, rhs in rhs })
-        self.interrupt ??= other.interrupt
+        self.onInterrupt ??= other.onInterrupt
         self.activityPhaseOfLastItem ??= other.activityPhaseOfLastItem
     }
 }

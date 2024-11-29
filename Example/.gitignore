@@ -1,0 +1,7 @@
+Dependencies/*
+.DS_Store
+.swiftpm/
+.swiftpm/*
+/.build
+/Packages
+xcuserdata/

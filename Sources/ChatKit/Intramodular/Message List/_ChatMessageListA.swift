@@ -7,7 +7,7 @@ import SwiftUIZ
 
 /// A SwiftUIX `ScrollView` + `LazyVStack` based approach.
 public struct _ChatMessageListA<Content: View>: View {
-    @Environment(\._chatViewPreferences) private var chatView
+    @Environment(\._chatViewPreferences) private var chatView: _ChatViewPreferences
     
     private let content: Content
     

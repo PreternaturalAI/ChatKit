@@ -40,7 +40,7 @@ extension View {
     ) -> some View {
         withActionTrampoline(for: Action(action)) { action in
             transformEnvironment(\._chatViewPreferences) {
-                $0.interrupt = action
+                $0.onInterrupt = action
             }
         }
     }

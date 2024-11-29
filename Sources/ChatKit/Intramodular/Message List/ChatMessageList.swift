@@ -6,7 +6,8 @@ import SwiftUIX
 import SwiftUIZ
 
 public struct ChatMessageList<Data: RandomAccessCollection>: View where Data.Element: Identifiable {
-    @Environment(\._chatViewPreferences) private var _chatViewPreferences
+    @Environment(\._chatViewPreferences) private var _chatViewPreferences: _ChatViewPreferences
+    @Environment(\.userInterfaceIdiom) private var userInterfaceIdiom: UserInterfaceIdiom
     
     private let _content : AnyView
     private var _chatViewActions = _ChatViewActions()
@@ -23,15 +24,17 @@ public struct ChatMessageList<Data: RandomAccessCollection>: View where Data.Ele
     }
     
     private var implementationStrategy: ImplementationStrategy {
-#if os(macOS)
-        if _isOfficialImplementationStillFucked {
-            ImplementationStrategy.c // SwiftUIX.CocoaList
+        if userInterfaceIdiom == .mac {
+            if _isOfficialImplementationStillFucked {
+                return ImplementationStrategy.c // SwiftUIX.CocoaList
+            } else {
+                return ImplementationStrategy.b // SwiftUI.List
+            }
+        } else if userInterfaceIdiom == .phone || userInterfaceIdiom == .vision {
+            return ImplementationStrategy.a
         } else {
-            ImplementationStrategy.b // SwiftUI.List
+            return ImplementationStrategy.a
         }
-#elseif os(iOS) || os(visionOS)
-        ImplementationStrategy.a // LazyVStack + ScrollView
-#endif
     }
     
     init<C: View>(_content: () -> C) {

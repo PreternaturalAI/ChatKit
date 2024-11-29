@@ -7,7 +7,7 @@ import SwiftUIZ
 
 @View(.dynamic)
 public struct _LazyMessagesVStack<Content: View>: View {
-    @Environment(\._chatViewPreferences) var chatView
+    @Environment(\._chatViewPreferences) var chatView: _ChatViewPreferences
     
     private let content: Content
     
