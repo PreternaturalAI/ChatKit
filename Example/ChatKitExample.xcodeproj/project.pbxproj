@@ -9,9 +9,6 @@
 /* Begin PBXBuildFile section */
 		46072CAF2C7D3091008BAAAD /* Swallow in Frameworks */ = {isa = PBXBuildFile; productRef = 46072CAE2C7D3091008BAAAD /* Swallow */; };
 		46072CB12C7D3091008BAAAD /* SwallowMacrosClient in Frameworks */ = {isa = PBXBuildFile; productRef = 46072CB02C7D3091008BAAAD /* SwallowMacrosClient */; };
-		4623208D2CF9B7BC00229594 /* SwallowUI in Frameworks */ = {isa = PBXBuildFile; productRef = 468FD7622C298842007F4C41 /* SwallowUI */; };
-		4623208E2CF9B7BC00229594 /* IPC in Frameworks */ = {isa = PBXBuildFile; productRef = 466DD84D2C78A0B60098A5C3 /* IPC */; };
-		4623208F2CF9B7BC00229594 /* PromptBuilder in Frameworks */ = {isa = PBXBuildFile; productRef = 469D27592C78AA5800F6DB9A /* PromptBuilder */; };
 		468FD7602C298504007F4C41 /* Sideproject in Frameworks */ = {isa = PBXBuildFile; productRef = 468FD75F2C298504007F4C41 /* Sideproject */; };
 		46978A872B0D27C300DF0752 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46978A592B0D27C200DF0752 /* ContentView.swift */; };
 		D47A38AB294E861E002C06CA /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47A38AA294E861E002C06CA /* App.swift */; };
@@ -32,9 +29,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4623208F2CF9B7BC00229594 /* PromptBuilder in Frameworks */,
-				4623208E2CF9B7BC00229594 /* IPC in Frameworks */,
-				4623208D2CF9B7BC00229594 /* SwallowUI in Frameworks */,
 				46072CAF2C7D3091008BAAAD /* Swallow in Frameworks */,
 				46072CB12C7D3091008BAAAD /* SwallowMacrosClient in Frameworks */,
 				468FD7602C298504007F4C41 /* Sideproject in Frameworks */,
@@ -122,9 +116,6 @@
 			name = ChatKitExample;
 			packageProductDependencies = (
 				468FD75F2C298504007F4C41 /* Sideproject */,
-				468FD7622C298842007F4C41 /* SwallowUI */,
-				466DD84D2C78A0B60098A5C3 /* IPC */,
-				469D27592C78AA5800F6DB9A /* PromptBuilder */,
 				46072CAE2C7D3091008BAAAD /* Swallow */,
 				46072CB02C7D3091008BAAAD /* SwallowMacrosClient */,
 			);
@@ -329,6 +320,7 @@
 				FUSE_BUILD_SCRIPT_PHASES = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Targets/$(TARGET_NAME)/Supporting Files/Bundle Resources/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = ChatKitExample;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -378,6 +370,7 @@
 				FUSE_BUILD_SCRIPT_PHASES = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Targets/$(TARGET_NAME)/Supporting Files/Bundle Resources/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = ChatKitExample;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -451,22 +444,10 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = SwallowMacrosClient;
 		};
-		466DD84D2C78A0B60098A5C3 /* IPC */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = IPC;
-		};
 		468FD75F2C298504007F4C41 /* Sideproject */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 468FD75E2C298504007F4C41 /* XCRemoteSwiftPackageReference "Sideproject" */;
 			productName = Sideproject;
-		};
-		468FD7622C298842007F4C41 /* SwallowUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = SwallowUI;
-		};
-		469D27592C78AA5800F6DB9A /* PromptBuilder */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = PromptBuilder;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
