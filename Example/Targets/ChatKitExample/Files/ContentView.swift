@@ -3,6 +3,7 @@
 //
 
 import CorePersistence
+import Perplexity
 import Sideproject
 
 @Singleton
@@ -14,6 +15,12 @@ final class DataStore: ObservableObject {
         options: .init(readErrorRecoveryStrategy: .discardAndReset)
     )
     var chats: IdentifierIndexingArrayOf<Sideproject.ChatFile> = []
+    
+    init() {
+        chats._forEach(mutating: {
+            $0.model = Perplexity.Model.llama3SonarLarge32kChat.__conversion()
+        })
+    }
 }
 
 public struct ContentView: View {
@@ -22,7 +29,7 @@ public struct ContentView: View {
     @UserStorage("navigationSelection", deferUpdates: true)
     var selection: Sideproject.ChatFile.ID?
     
-    @State var llm: (any LLMRequestHandling)? = Sideproject.shared
+    @State var llm: Perplexity.Client? = Perplexity.Client(apiKey: "<APIKEY>")
     
     public var body: some View {
         NavigationSplitView {
@@ -54,14 +61,13 @@ public struct ContentView: View {
         } detail: {
             Group {
                 if
-                    let llm = llm,
+                    let llm: any LLMRequestHandling = llm,
                     let selection = selection,
                     let chat: Sideproject.ChatFile = dataStore.chats[id: selection]
                 {
-                    Sideproject.ChatView(
-                        messages: chat.messages,
-                        llm: llm
-                    )
+                    let chatBinding: PublishedAsyncBinding<Sideproject.ChatFile> = PublishedAsyncBinding.unwrapping(dataStore, \.chats[id: selection], defaultValue: chat)
+                    
+                    Sideproject.ChatView(chatBinding, llm: llm)
                 }
             }
             .id(selection)
