@@ -3,6 +3,7 @@
 //
 
 import Foundation
+import Swallow
 import SwiftUIZ
 
 struct _ChatItemConfiguration: Initiable, ExpressibleByNilLiteral {
