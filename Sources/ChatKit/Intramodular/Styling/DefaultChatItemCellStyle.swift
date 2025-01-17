@@ -5,8 +5,8 @@
 import SwiftUIX
 import SwiftUIZ
 
-struct iMessageChatItemCellStyle: ChatItemCellStyle {
-    func body(
+public struct iMessageChatItemCellStyle: ChatItemCellStyle {
+    public func body(
         configuration: ChatItemCellConfiguration
     ) -> some View {
         makeContent(configuration: configuration)
