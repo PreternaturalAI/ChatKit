@@ -8,7 +8,7 @@ public struct ChatItemCellConfiguration {
     public let item: AnyChatMessage
     public let decorations: [ChatItemDecorationPlacement: AnyView]
 
-    @Binding var isEditing: Bool
+    @Binding public var isEditing: Bool
 }
 
 public protocol ChatItemCellStyle: DynamicProperty {

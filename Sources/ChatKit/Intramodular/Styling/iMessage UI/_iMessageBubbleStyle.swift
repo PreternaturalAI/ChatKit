@@ -5,7 +5,6 @@
 import Swallow
 import SwiftUIX
 
-@_spi(Internal)
 @available(tvOS, unavailable)
 @available(watchOS, unavailable)
 public struct _iMessageBubbleStyle: ViewModifier {
