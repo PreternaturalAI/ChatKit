@@ -8,28 +8,41 @@
 import SwiftUIZ
 import NaturalLanguage
 
-// MARK: - Style
+public struct TranslationHandler {
+    let view: (String) -> AnyView
+    public let action: (String) -> Void
+    let shouldAutoTranslate: () -> Bool  // Renamed here
+    
+    public init<V: View>(
+        @ViewBuilder view: @escaping (String) -> V,
+        action: @escaping (String) -> Void,
+        shouldAutoTranslate: @escaping () -> Bool  // Renamed here
+    ) {
+        self.view = { AnyView(view($0)) }
+        self.action = action
+        self.shouldAutoTranslate = shouldAutoTranslate
+    }
+}
+
 extension ChatItemCellStyle where Self == TranslationStyle {
     public static var translation: TranslationStyle {
         TranslationStyle()
     }
 }
 
-// MARK: - Translation Handler
-public struct TranslationHandler {
-    let view: (String) -> AnyView
-    let action: (String) -> Void
+// MARK: - Language Detection Helper
+public func isTextInDifferentLocale(_ text: String, locale: Locale = .current) -> Bool {
+    let languageDetector = NLLanguageRecognizer()
+    languageDetector.processString(text)
     
-    public init<V: View>(
-        @ViewBuilder view: @escaping (String) -> V,
-        action: @escaping (String) -> Void
-    ) {
-        self.view = { AnyView(view($0)) }
-        self.action = action
+    guard let detectedLanguage = languageDetector.dominantLanguage?.rawValue else {
+        return false
     }
+    
+    return locale.language.languageCode?.identifier != detectedLanguage
 }
 
-// MARK: - Style Implementation
+// MARK: - Translation Style
 public struct TranslationStyle: ChatItemCellStyle {
     @Environment(\.translationLocale) private var targetLocale
     @Environment(\.translationHandler) private var translationHandler
@@ -37,18 +50,8 @@ public struct TranslationStyle: ChatItemCellStyle {
     
     public init() {}
     
-    private func isTextInCurrentLocale(_ text: String) -> Bool {
-        let languageDetector = NLLanguageRecognizer()
-        languageDetector.processString(text)
-        guard let detectedLanguage = languageDetector.dominantLanguage?.rawValue else {
-            return true
-        }
-        return targetLocale.language.languageCode?.identifier == detectedLanguage
-    }
-    
     public func body(configuration: ChatItemCellConfiguration) -> some View {
         VStack(alignment: try! configuration.item.isSender ? .trailing : .leading, spacing: 0) {
-
             Group {
                 makeContent(configuration: configuration)
                     .modifier(
@@ -77,8 +80,8 @@ public struct TranslationStyle: ChatItemCellStyle {
             }
             
             if let content = configuration.item.body,
-               !isTextInCurrentLocale(content),
-               translationHandler != nil {
+               let handler = translationHandler,
+               isTextInDifferentLocale(content, locale: targetLocale) {
                 HStack {
                     if try! configuration.item.isSender {
                         Spacer()
@@ -87,10 +90,9 @@ public struct TranslationStyle: ChatItemCellStyle {
                     Button(action: {
                         shouldShowTranslation.toggle()
                         if !shouldShowTranslation {
-                            // Only trigger translation when showing
                             return
                         }
-                        translationHandler?.action(content)
+                        handler.action(content)
                     }) {
                         Label(shouldShowTranslation ? "Hide" : "Translate", systemImage: "globe")
                             .font(.caption)
@@ -104,9 +106,21 @@ public struct TranslationStyle: ChatItemCellStyle {
                         Spacer()
                     }
                 }
+                .frame(height: 20)
+            } else {
+                EmptyView()
+                    .frame(height: 20)
             }
         }
         .background(Color.almostClear)
+        .onAppear {
+            if let content = configuration.item.body,
+               let handler = translationHandler,
+               handler.shouldAutoTranslate() {  // Changed here
+                shouldShowTranslation = true
+                handler.action(content)
+            }
+        }
         .contextMenu {
             ChatItemActions()
         }
@@ -139,30 +153,75 @@ public struct TranslationStyle: ChatItemCellStyle {
     }
 }
 
-// MARK: - Modifiers
+// MARK: - View Extensions
 public extension View {
-    func translationLocale(_ locale: Locale) -> some View {
-        environment(\.translationLocale, locale)
+    func shouldAutoTranslate(  // Renamed here
+        _ shouldAutoTranslate: @escaping () -> Bool
+    ) -> some View {
+        modifier(TranslationConditionModifier(shouldAutoTranslate: shouldAutoTranslate))
     }
     
     func onTranslate<V: View>(
         action: @escaping (String) -> Void,
-        @ViewBuilder view: @escaping (String) -> V
+        @ViewBuilder label: @escaping (String) -> V
     ) -> some View {
-        environment(\.translationHandler, TranslationHandler(view: view, action: action))
+        modifier(TranslationActionModifier(action: action, label: label))
+    }
+    
+    func translationLocale(_ locale: Locale) -> some View {
+        environment(\.translationLocale, locale)
+    }
+}
+
+// MARK: - Modifiers
+private struct TranslationConditionModifier: ViewModifier {
+    let shouldAutoTranslate: () -> Bool  // Renamed here
+    
+    func body(content: Content) -> some View {
+        content.environment(\.translationShouldTranslate, shouldAutoTranslate)
+    }
+}
+
+private struct TranslationActionModifier: ViewModifier {
+    @Environment(\.translationShouldTranslate) private var shouldAutoTranslate  // Renamed here
+    
+    let action: (String) -> Void
+    let label: (String) -> AnyView
+    
+    init<V: View>(
+        action: @escaping (String) -> Void,
+        @ViewBuilder label: @escaping (String) -> V
+    ) {
+        self.action = action
+        self.label = { AnyView(label($0)) }
+    }
+    
+    func body(content: Content) -> some View {
+        content.environment(
+            \.translationHandler,
+            TranslationHandler(
+                view: label,
+                action: action,
+                shouldAutoTranslate: shouldAutoTranslate ?? { false }  // Renamed here
+            )
+        )
     }
 }
 
 // MARK: - Environment Keys
-private struct TranslationLocaleKey: EnvironmentKey {
-    static var defaultValue: Locale = .current
+public struct TranslationLocaleKey: EnvironmentKey {
+    public static var defaultValue: Locale = .current
 }
 
-private struct TranslationHandlerKey: EnvironmentKey {
-    static var defaultValue: TranslationHandler? = nil
+public struct TranslationHandlerKey: EnvironmentKey {
+    public static var defaultValue: TranslationHandler? = nil
 }
 
-extension EnvironmentValues {
+private struct TranslationShouldTranslateKey: EnvironmentKey {
+    static var defaultValue: (() -> Bool)? = nil
+}
+
+public extension EnvironmentValues {
     var translationLocale: Locale {
         get { self[TranslationLocaleKey.self] }
         set { self[TranslationLocaleKey.self] = newValue }
@@ -171,5 +230,10 @@ extension EnvironmentValues {
     var translationHandler: TranslationHandler? {
         get { self[TranslationHandlerKey.self] }
         set { self[TranslationHandlerKey.self] = newValue }
+    }
+    
+    var translationShouldTranslate: (() -> Bool)? {
+        get { self[TranslationShouldTranslateKey.self] }
+        set { self[TranslationShouldTranslateKey.self] = newValue }
     }
 }
