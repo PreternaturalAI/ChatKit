@@ -6,7 +6,7 @@ import MarkdownUI
 @_spi(Internal) import SwiftUIX
 import SwiftUIZ
 
-struct _TextChatMessageViewContent: View {
+public struct _TextChatMessageViewContent: View {
     @Environment(\._chatItemConfiguration) var _chatItemConfiguration
     
     let message: AnyChatMessage
@@ -15,7 +15,17 @@ struct _TextChatMessageViewContent: View {
     
     @State private var editableText: String?
     
-    var body: some View {
+    public init(
+        message: AnyChatMessage,
+        isEditing: Binding<Bool>,
+        editableText: String? = nil
+    ) {
+        self.message = message
+        self._isEditing = isEditing
+        self.editableText = editableText
+    }
+    
+    public var body: some View {
         let messageBody: String = message.body!
 
         Group {

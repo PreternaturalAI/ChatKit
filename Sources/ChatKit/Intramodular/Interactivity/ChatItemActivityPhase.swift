@@ -10,7 +10,7 @@ public enum ChatItemActivityPhase: Hashable {
     case sending
     case failed(AnyError)
     
-    var error: AnyError? {
+    public var error: AnyError? {
         guard case .failed(let error) = self else {
             return nil
         }
