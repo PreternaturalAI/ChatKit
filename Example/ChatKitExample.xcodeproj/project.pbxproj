@@ -11,6 +11,8 @@
 		46072CB12C7D3091008BAAAD /* SwallowMacrosClient in Frameworks */ = {isa = PBXBuildFile; productRef = 46072CB02C7D3091008BAAAD /* SwallowMacrosClient */; };
 		468FD7602C298504007F4C41 /* Sideproject in Frameworks */ = {isa = PBXBuildFile; productRef = 468FD75F2C298504007F4C41 /* Sideproject */; };
 		46978A872B0D27C300DF0752 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46978A592B0D27C200DF0752 /* ContentView.swift */; };
+		9856E6D42D08AA84009359D9 /* Swallow in Frameworks */ = {isa = PBXBuildFile; productRef = 9856E6D32D08AA84009359D9 /* Swallow */; };
+		9856E6D62D08AA84009359D9 /* SwallowMacrosClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9856E6D52D08AA84009359D9 /* SwallowMacrosClient */; };
 		D47A38AB294E861E002C06CA /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47A38AA294E861E002C06CA /* App.swift */; };
 		D47A38AF294E861F002C06CA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D47A38AE294E861F002C06CA /* Assets.xcassets */; };
 /* End PBXBuildFile section */
@@ -29,6 +31,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9856E6D42D08AA84009359D9 /* Swallow in Frameworks */,
+				9856E6D62D08AA84009359D9 /* SwallowMacrosClient in Frameworks */,
 				46072CAF2C7D3091008BAAAD /* Swallow in Frameworks */,
 				46072CB12C7D3091008BAAAD /* SwallowMacrosClient in Frameworks */,
 				468FD7602C298504007F4C41 /* Sideproject in Frameworks */,
@@ -118,6 +122,8 @@
 				468FD75F2C298504007F4C41 /* Sideproject */,
 				46072CAE2C7D3091008BAAAD /* Swallow */,
 				46072CB02C7D3091008BAAAD /* SwallowMacrosClient */,
+				9856E6D32D08AA84009359D9 /* Swallow */,
+				9856E6D52D08AA84009359D9 /* SwallowMacrosClient */,
 			);
 			productName = ExampleApp;
 			productReference = D47A38A7294E861E002C06CA /* ChatKitExample.app */;
@@ -149,6 +155,7 @@
 			mainGroup = D47A389E294E861E002C06CA;
 			packageReferences = (
 				468FD75E2C298504007F4C41 /* XCRemoteSwiftPackageReference "Sideproject" */,
+				9856E6D22D08AA84009359D9 /* XCRemoteSwiftPackageReference "Swallow" */,
 			);
 			productRefGroup = D47A38A8294E861E002C06CA /* Products */;
 			projectDirPath = "";
@@ -433,6 +440,14 @@
 				kind = branch;
 			};
 		};
+		9856E6D22D08AA84009359D9 /* XCRemoteSwiftPackageReference "Swallow" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/vmanot/Swallow.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -448,6 +463,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 468FD75E2C298504007F4C41 /* XCRemoteSwiftPackageReference "Sideproject" */;
 			productName = Sideproject;
+		};
+		9856E6D32D08AA84009359D9 /* Swallow */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9856E6D22D08AA84009359D9 /* XCRemoteSwiftPackageReference "Swallow" */;
+			productName = Swallow;
+		};
+		9856E6D52D08AA84009359D9 /* SwallowMacrosClient */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9856E6D22D08AA84009359D9 /* XCRemoteSwiftPackageReference "Swallow" */;
+			productName = SwallowMacrosClient;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
